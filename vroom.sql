@@ -20,10 +20,10 @@ INSERT INTO `meetings` (`meetingName`, `isOnline`, `startTime`, `endTime`, `zoom
 
 /*create meeting member table w/ default values*/
 /*used to connect meeting members to the meeting*/
-CREATE TABLE `meetingMembers` (`rowID` int not null auto_increment primary key, `meetingID` int not null, `userID` int not null, `isHost` boolean not null,
+CREATE TABLE `meetingMembers` (`rowID` int not null auto_increment primary key, `meetingID` int not null, `userID` int not null, `isHost` boolean not null, `notes` varchar(255),
 KEY `meetingID` (`meetingID`), KEY `userID` (`userID`), FOREIGN KEY (`meetingID`) REFERENCES `meetings` (`meetingID`), FOREIGN KEY (`userID`) REFERENCES `users`(`userID`));
-INSERT INTO `meetingMembers` (`meetingID`, `userID`, `isHost`) VALUES
-(1, 1, 0),
-(1, 2, 1),
-(2, 1, 0),
-(2, 2, 1);
+INSERT INTO `meetingMembers` (`meetingID`, `userID`, `isHost`, `notes`) VALUES
+(1, 1, 0, 'help me with my math homework'),
+(1, 2, 1, 'i am having office hours for our class'),
+(2, 1, 0, NULL),
+(2, 2, 1, 'class time');
