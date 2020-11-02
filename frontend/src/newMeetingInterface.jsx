@@ -1,11 +1,12 @@
-import React, { useRef } from 'react';
+import React, { useRef } from 'react'
 
-import Datetime from 'react-datetime';
-import * as BS from 'react-bootstrap';
-import {v4 as uuidv4} from 'uuid';
+import Datetime from 'react-datetime'
+import moment from 'moment'
+import * as BS from 'react-bootstrap'
+import {v4 as uuidv4} from 'uuid'
 
 
-export default function NewMeetingInterface(props) {
+const NewMeetingInterface = (props) => {
 
     // STATE LISTENER
     const [modalShow, setModalShow] = React.useState(false)
@@ -23,7 +24,7 @@ export default function NewMeetingInterface(props) {
     const handleShow = () => setModalShow(true)
 
     // NEW MEETING HANDLER
-    function handleAddMeeting(e) {
+    const handleAddMeeting = (e) => {
         // GET FORM FIELD VALUES
         const title = titleRef.current.value
         const date = dateRef.current.state.inputValue
@@ -47,6 +48,10 @@ export default function NewMeetingInterface(props) {
             }]
         })
 
+        // NAVIGATE CALENDAR TO NEW MEETING DATE
+        props.mainCal.current.state.selectedDate = dateRef.current.state.selectedDate
+        props.setCurrentDate(dateRef.current.state.viewDate)
+
         // EXIT THE MODAL
         handleClose()
     }
@@ -54,18 +59,19 @@ export default function NewMeetingInterface(props) {
     return (
         <>
             {/* BUTTON TO TOGGLE DISPLAY MODAL */}
-            <BS.Button variant="primary" onClick={handleShow} block>New Meeting</BS.Button>
+            <BS.Button variant='primary' onClick={handleShow} block>New Meeting</BS.Button>
 
             {/* START DISPLAY MODAL */}
             <BS.Modal
                 show={modalShow}
-                size="lg"
-                aria-labelledby="contained-modal-title-vcenter"
+                onHide={handleClose}
+                size='lg'
+                aria-labelledby='contained-modal-title-vcenter'
                 centered
             >
 
                 <BS.Modal.Header>
-                    <BS.Modal.Title id="contained-modal-title-vcenter">
+                    <BS.Modal.Title id='contained-modal-title-vcenter'>
                         Schedule a New Meeting
                     </BS.Modal.Title>
                 </BS.Modal.Header>
@@ -74,55 +80,60 @@ export default function NewMeetingInterface(props) {
                     <BS.Form>
 
                         {/* MEETING TITLE */}
-                        <BS.Form.Group controlId="text">
+                        <BS.Form.Group controlId='text'>
                             <BS.Form.Label>Meeting Title</BS.Form.Label>
                             <BS.Form.Control
                                 ref={titleRef}
-                                type="text"
-                                placeholder="My Awesome Zoom Meeting"
-                                autocomplete="off"
+                                type='text'
+                                placeholder='My Awesome Zoom Meeting'
+                                autocomplete='off'
                             />
                         </BS.Form.Group>
 
                         {/* MEETING DATE */}
-                        <BS.Form.Group controlId="datetime">
+                        <BS.Form.Group controlId='datetime'>
                             <BS.Form.Label>Meeting Date</BS.Form.Label>
-                            <Datetime ref={dateRef} timeFormat={false} />
+                            <Datetime
+                                ref={dateRef}
+                                timeFormat={false}
+                                closeOnSelect={true}
+                                initialValue={props.currentDate}
+                                isValidDate={day => day.isAfter(moment().subtract( 1, 'day' ))}/>
                         </BS.Form.Group>
 
                         {/* MEETING START TIME */}
-                        <BS.Form.Group controlId="datetime">
+                        <BS.Form.Group controlId='datetime'>
                             <BS.Form.Label>Start Time</BS.Form.Label>
                             <Datetime ref={startTimeRef} dateFormat={false} />
                         </BS.Form.Group>
 
                         {/* MEETING END TIME */}
-                        <BS.Form.Group controlId="datetime">
+                        <BS.Form.Group controlId='datetime'>
                             <BS.Form.Label>End Time</BS.Form.Label>
                             <Datetime ref={endTimeRef} dateFormat={false} />
                         </BS.Form.Group>
 
                         {/* MEETING ZOOM ID */}
-                        <BS.Form.Group controlId="text">
+                        <BS.Form.Group controlId='text'>
                             <BS.Form.Label>Zoom Meeting ID</BS.Form.Label>
                             <BS.Form.Control
                                 ref={idRef}
-                                type="text"
-                                placeholder="012 3456 7890"
-                                autocomplete="off"
+                                type='text'
+                                placeholder='012 3456 7890'
+                                autocomplete='off'
                             />
                         </BS.Form.Group>
 
                         {/* MEETING PASSCODE */}
-                        <BS.Form.Group controlId="text">
+                        <BS.Form.Group controlId='text'>
                             <BS.Form.Label>Zoom Meeting Passcode</BS.Form.Label>
                             <BS.Form.Control
                                 ref={passcodeRef}
-                                type="text"
-                                placeholder="S3cr3t-M33ting"
-                                autocomplete="off"
+                                type='text'
+                                placeholder='S3cr3t-M33ting'
+                                autocomplete='off'
                             />
-                            <BS.Form.Text className="text-muted">
+                            <BS.Form.Text className='text-muted'>
                                 if applicable
                             </BS.Form.Text>
                         </BS.Form.Group>
@@ -131,10 +142,12 @@ export default function NewMeetingInterface(props) {
 
                 {/* ACTION BUTTONS */}
                 <BS.Modal.Footer>
-                    <BS.Button variant="primary" onClick={handleAddMeeting}>Add Meeting</BS.Button>
-                    <BS.Button variant="danger" onClick={handleClose}>Cancel</BS.Button>
+                    <BS.Button variant='primary' onClick={handleAddMeeting}>Add Meeting</BS.Button>
+                    <BS.Button variant='danger' onClick={handleClose}>Cancel</BS.Button>
             </BS.Modal.Footer>
         </BS.Modal>
       </>
-      );
+    )
 }
+
+export default NewMeetingInterface

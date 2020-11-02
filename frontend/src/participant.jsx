@@ -1,14 +1,14 @@
-import React from 'react';
+import React from 'react'
 
-import * as BS from 'react-bootstrap';
+import * as BS from 'react-bootstrap'
 
 
-export default function Participant(props) {
+const Participant = (props) => {
 
     // REMOVE PARTICIPANT HANDLER
-    function handleRemove() {
+    const handleRemove = () => {
         // FILTER PARTICIPANT OUT OF THE PARTICIPANTS LIST
-        const filtered = props.meeting.participants.filter(function(participant) {
+        const filtered = props.meeting.participants.filter((participant) => {
             return participant.id !== props.participant.id
         })
 
@@ -20,8 +20,8 @@ export default function Participant(props) {
     return(
         // DISPLAY PARTICIPANT WITH TOOLTIP
         <BS.OverlayTrigger
-            trigger="hover"
-            placement="bottom"
+            trigger='hover'
+            placement='bottom'
             overlay={
                 <BS.Tooltip id={`tooltip-bottom`}>
                     Click to Remove
@@ -29,9 +29,11 @@ export default function Participant(props) {
             }
         >
             {/* REMOVE PARTICIPANT ON CLICK */}
-            <BS.Button as={BS.Badge} pill variant="secondary" onClick={handleRemove}>
+            <BS.Button as={BS.Badge} pill variant='secondary' onClick={handleRemove} className='participant-label'>
                 {props.participant.name}
             </BS.Button>
         </BS.OverlayTrigger>
     )
 }
+
+export default Participant

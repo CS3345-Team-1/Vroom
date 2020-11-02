@@ -1,11 +1,11 @@
-import React, { useRef } from 'react';
+import React, { useRef } from 'react'
 
-import * as BS from 'react-bootstrap';
+import * as BS from 'react-bootstrap'
 import * as Icon from 'react-bootstrap-icons'
-import {v4 as uuidv4} from 'uuid';
+import {v4 as uuidv4} from 'uuid'
 
 
-export default function AddParticipantInterface(props) {
+const ParticipantInterface = (props) => {
     // STATE LISTENER
     const [modalShow, setModalShow] = React.useState(false)
 
@@ -17,7 +17,7 @@ export default function AddParticipantInterface(props) {
     const handleShow = () => setModalShow(true)
 
     // ADD PARTICIPANT HANDLER
-    function handleAddParticipant(e) {
+    const handleAddParticipant = () => {
         // GET FIELD VALUE
         const name = nameRef.current.value
 
@@ -50,29 +50,29 @@ export default function AddParticipantInterface(props) {
         <>
             {/* DISPLAYED TOGGLE ELEMENT WITH TOOLTIP */}
             <BS.OverlayTrigger
-                trigger="hover"
-                placement="right"
+                trigger='hover'
+                placement='right'
                 overlay={
                     <BS.Tooltip id={`tooltip-right`}>
                         Click to Add
                     </BS.Tooltip>
                 }
             >
-                <BS.Button as={BS.Badge} onClick={handleShow} pill variant="outline-success">
-                    <Icon.PersonPlus />
+                <BS.Button as={BS.Badge} onClick={handleShow} pill variant='outline-success'>
+                    <Icon.Plus />
                 </BS.Button>
             </BS.OverlayTrigger>
 
             {/* START MODAL */}
             <BS.Modal
+                onHide={handleClose}
                 show={modalShow}
-                size="sm"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
+                size='sm'
+                aria-labelledby='contained-modal-title-vcenter'
             >
 
                 <BS.Modal.Header>
-                    <BS.Modal.Title id="contained-modal-title-vcenter">
+                    <BS.Modal.Title id='contained-modal-title-vcenter'>
                         New Participant
                     </BS.Modal.Title>
                 </BS.Modal.Header>
@@ -80,12 +80,12 @@ export default function AddParticipantInterface(props) {
                 <BS.Modal.Body>
                     {/* NEW PARTICIPANT FIELD */}
                     <BS.Form>
-                        <BS.Form.Group controlId="text">
+                        <BS.Form.Group controlId='text'>
                             <BS.Form.Control
                                 ref={nameRef}
-                                type="text"
-                                placeholder="Participant Name"
-                                autocomplete="off"
+                                type='text'
+                                placeholder='Participant Name'
+                                autocomplete='off'
                             />
                         </BS.Form.Group>
                     </BS.Form>
@@ -93,10 +93,12 @@ export default function AddParticipantInterface(props) {
 
                 {/* ACTION BUTTONS */}
                 <BS.Modal.Footer>
-                    <BS.Button variant="primary" onClick={handleAddParticipant}>Add Participant</BS.Button>
-                    <BS.Button variant="danger" onClick={handleClose}>Cancel</BS.Button>
+                    <BS.Button variant='primary' onClick={handleAddParticipant}>Add Participant</BS.Button>
+                    <BS.Button variant='danger' onClick={handleClose}>Cancel</BS.Button>
                 </BS.Modal.Footer>
             </BS.Modal>
         </>
-    );
+    )
 }
+
+export default ParticipantInterface
