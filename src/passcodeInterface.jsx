@@ -1,17 +1,18 @@
 import React, { useRef } from 'react'
 
 import * as BS from 'react-bootstrap'
-import * as Icon from 'react-bootstrap-icons'
 import {CopyToClipboard} from 'react-copy-to-clipboard'
+import * as Icon from 'react-bootstrap-icons'
+import CopiedBadge from './copiedBadge'
 
 
-const MeetingIDInterface = (props) => {
+const PasscodeInterface = (props) => {
     // STATE LISTENER
     const [modalShow, setModalShow] = React.useState(false)
     const [copyAlert, setCopyAlert] = React.useState(false)
 
     // FORM TRACKING REF
-    const idRef = useRef()
+    const passcodeRef = useRef()
 
     // MODAL HANDLERS
     const handleClose = () => setModalShow(false)
@@ -20,16 +21,16 @@ const MeetingIDInterface = (props) => {
     // NEW MEETING HANDLER
     const handleChangeID = (e) => {
         // GET FIELD VALUE
-        const newID = idRef.current.value
+        const newPasscode = passcodeRef.current.value
 
         // IF FIELD IS EMPTY, DO NOTHING
-        if (newID === '') {
+        if (newPasscode === '') {
             handleClose()
             return
         }
 
-        // UPDATE MEETING ID AND STATE
-        props.meeting.meetingID = newID
+        // UPDATE MEETING PASSCODE AND STATE
+        props.meeting.passcode = newPasscode
         props.setMeetings(meetings => { return [...meetings] })
 
         // CLOSE MODAL
@@ -38,7 +39,7 @@ const MeetingIDInterface = (props) => {
 
     return (
         <>
-            {/* MEETING ID DISPLAY BUTTON WITH TOOLTIP */}
+            {/* MEETING PASSCODE DISPLAY BUTTON WITH TOOLTIP */}
             <BS.OverlayTrigger
                 trigger='hover'
                 placement='top'
@@ -49,9 +50,9 @@ const MeetingIDInterface = (props) => {
                 }
             >
                 {/* COPIES ID TO CLIPBOARD ON CLICK */}
-                <CopyToClipboard text={props.meeting.meetingID} onCopy={() => setCopyAlert(!copyAlert)}>
-                    <BS.Button as={BS.Badge} pill variant='outline-info'>
-                        {props.meeting.meetingID}
+                <CopyToClipboard text={props.meeting.passcode} onCopy={() => setCopyAlert(!copyAlert)}>
+                    <BS.Button as={BS.Badge} size='lg' pill variant='outline-danger'>
+                        {props.meeting.passcode}
                     </BS.Button>
                 </CopyToClipboard>
             </BS.OverlayTrigger>
@@ -61,7 +62,7 @@ const MeetingIDInterface = (props) => {
                 trigger='hover'
                 placement='right'
                 overlay={
-                    <BS.Tooltip id={`tooltip-right`}>
+                    <BS.Tooltip id={'tooltip-right'}>
                         Click to Edit
                     </BS.Tooltip>
                 }
@@ -72,38 +73,29 @@ const MeetingIDInterface = (props) => {
             </BS.OverlayTrigger>
 
             {/* COPIED TO CLIPBOARD ALERT */}
-            <BS.Toast
-                style={{display: 'inline'}}
-                onClose={() => setCopyAlert(false)}
-                show={copyAlert}
-                delay={1000}
-                autohide
-                className='copied-alert'
-            >
-                Copied to Clipboard
-            </BS.Toast>
+            <CopiedBadge copyAlert={copyAlert} setCopyAlert={(i) => setCopyAlert(i)} />
 
             {/* START EDIT MODAL */}
             <BS.Modal
                 onHide={handleClose}
                 show={modalShow}
                 size='sm'
-                aria-labelledby='contained-modal-title'
+                aria-labelledby='contained-modal-title-vcenter'
             >
                 <BS.Modal.Header>
-                    <BS.Modal.Title id='contained-modal-title'>
-                        Edit Meeting ID
+                    <BS.Modal.Title id='contained-modal-title-vcenter'>
+                        Edit Meeting Passcode
                     </BS.Modal.Title>
                 </BS.Modal.Header>
 
                 <BS.Modal.Body>
-                    {/* NEW MEETING ID FORM FIELD */}
+                    {/* NEW PASSCODE FORM FIELD */}
                     <BS.Form>
                         <BS.Form.Group controlId='text'>
                             <BS.Form.Control
-                                ref={idRef}
+                                ref={passcodeRef}
                                 type='text'
-                                defaultValue={props.meeting.meetingID}
+                                defaultValue={props.meeting.passcode}
                                 autocomplete='off'
                             />
                         </BS.Form.Group>
@@ -120,4 +112,4 @@ const MeetingIDInterface = (props) => {
     )
 }
 
-export default MeetingIDInterface
+export default PasscodeInterface

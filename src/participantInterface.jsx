@@ -58,8 +58,8 @@ const ParticipantInterface = (props) => {
                     </BS.Tooltip>
                 }
             >
-                <BS.Button as={BS.Badge} onClick={handleShow} pill variant='outline-success'>
-                    <Icon.Plus />
+                <BS.Button variant='link' size='sm' onClick={handleShow} className={'shadow-none'}>
+                    <Icon.PersonPlusFill />
                 </BS.Button>
             </BS.OverlayTrigger>
 

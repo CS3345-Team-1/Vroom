@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect, useContext } from 'react'
 
-import 'react-datetime/css/react-datetime.css'
+//import 'react-datetime/css/react-datetime.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import './react-datetime.css'
 import './app.css'
 import Datetime from 'react-datetime'
 import moment from 'moment'
@@ -12,6 +13,10 @@ import * as Icon from 'react-bootstrap-icons'
 
 // GLOBAL KEY FOR LOCAL STORAGE
 const LOCAL_STORAGE_KEY = 'vroom.meetings'
+
+// EXPRESS SERVER
+// const express = require('express')
+// const server = express()
 
 
 const App = () => {
@@ -74,8 +79,17 @@ const App = () => {
         <div id='content'>
             <BS.Card>
                 <BS.Navbar as={BS.Card.Header} bg='primary' variant='dark'>
-                    <BS.Navbar.Brand id='logo' as='BS.Button' variant='outline' size='lg'>vroom!</BS.Navbar.Brand>
-                    <BS.Navbar.Brand id='tagline' as='BS.Button' variant='outline' size='lg' className='ml-auto'>Zoom Meeting Scheduler</BS.Navbar.Brand>
+                    <BS.Navbar.Brand id='logo' as='BS.Button' variant='outline' size='lg'>
+                        vroom!
+                    </BS.Navbar.Brand>
+                    <BS.Navbar.Brand id='page-title' as='BS.Button' variant='outline' size='lg' className='ml-auto'>
+                        Schedule for Randolph Rankin
+                    </BS.Navbar.Brand>
+                    <BS.Navbar.Brand id='tagline' as='BS.Button' variant='outline' size='lg' className='ml-auto'>
+                        <Icon.Calendar3 className='header-icon' />
+                        <Icon.People className='header-icon' />
+                        <Icon.Bell className='header-icon' />
+                    </BS.Navbar.Brand>
                 </BS.Navbar>
                 <BS.Card.Body>
                     <div id='main-container'>

@@ -59,7 +59,7 @@ const Meeting = (props) => {
                     }
                 >
                     <BS.Button variant={'link'} className={'shadow-none'}>
-                        <Icon.Calendar3 />
+                        <Icon.CalendarPlus />
                     </BS.Button>
                 </BS.OverlayTrigger>
             </ICalendarLink>
