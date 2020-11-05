@@ -11,9 +11,6 @@ import MeetingList from './meetingList'
 import NewMeetingInterface from './newMeetingInterface'
 import * as Icon from 'react-bootstrap-icons'
 
-// MAYBE I NEED THESE FOR EXPRESS?
-import { BrowserRouter as Router, Route } from 'react-router-dom'
-
 // GLOBAL KEY FOR LOCAL STORAGE
 const LOCAL_STORAGE_KEY = 'vroom.meetings'
 
