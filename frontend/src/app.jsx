@@ -9,6 +9,7 @@ import * as BS from 'react-bootstrap'
 import MeetingList from './meetingList'
 import NewMeetingInterface from './newMeetingInterface'
 import * as Icon from 'react-bootstrap-icons'
+//import logo from '../public/vroom 1.png'
 
 // GLOBAL KEY FOR LOCAL STORAGE
 const LOCAL_STORAGE_KEY = 'vroom.meetings'
@@ -74,7 +75,15 @@ const App = () => {
         <div id='content'>
             <BS.Card>
                 <BS.Navbar as={BS.Card.Header} bg='primary' variant='dark'>
-                    <BS.Navbar.Brand id='logo' as='BS.Button' variant='outline' size='lg'>vroom!</BS.Navbar.Brand>
+                    <BS.Navbar.Brand href="#home">
+                        <img
+                            src='../public/vroom 1.PNG'
+                            width="160"
+                            height="50"
+                            className="d-inline-block align-top"
+                            alt=""
+                        />
+                    </BS.Navbar.Brand>
                     <BS.Navbar.Brand id='tagline' as='BS.Button' variant='outline' size='lg' className='ml-auto'>Zoom Meeting Scheduler</BS.Navbar.Brand>
                 </BS.Navbar>
                 <BS.Card.Body>
