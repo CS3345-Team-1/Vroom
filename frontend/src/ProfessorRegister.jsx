@@ -4,10 +4,24 @@ import React from 'react';
 export class ProfessorRegister extends React.Component{
     state = {
         userName: '',
-        firstName: '',
-        lastName: '',
+        first: '',
+        last: '',
         password: '',
+        authenticated: null,
+        registered: false,
     }
+
+    /*register(confirm){
+        if(this.state.password === confirm){
+            registered: true
+            this.ourRepo.addUser(
+                this.state.userName, 
+                this.state.first, 
+                this.state.last,
+                this.state.password)
+                .then(id => {new User(id, userName, first, last, password)})
+        }
+    }*/
 
     render(){
         return <>          
@@ -63,9 +77,10 @@ export class ProfessorRegister extends React.Component{
                     <button
                         type="button"
                         className="btn btn-primary"
-                        onClick={ () => this.onAddClick() }>
+                        onClick={ () => this.register() }>
                         Register
                         </button>
+                        {this.state.registered && <Redirect to= {'/dashboard/' + this.state.userName}/>}
                 </div>
             
             </form>

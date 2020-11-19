@@ -7,6 +7,20 @@ export class ProfessorLogin extends React.Component{
         password: '',
     }
 
+    onLogin(){
+        this.noverdoseRepo.login(this.state.userName, this.state.password).then(user => {
+            if(user.id !== undefined)
+            {
+                this.setState({authenticated: true});
+                
+            }
+            else
+            {
+                this.setState({authenticated: false});
+            }
+        });
+    }
+
     render(){
         return <>          
         <form className = "mainForm">
@@ -41,6 +55,7 @@ export class ProfessorLogin extends React.Component{
                         onClick={ () => this.onAddClick() }>
                         Login
                         </button>
+                        {this.state.authenticated && <Redirect to={'/dashboard/' + this.state.userName}/>}
                 </div>
             
             </form>
