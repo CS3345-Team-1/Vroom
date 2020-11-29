@@ -2,6 +2,11 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(bodyParser.raw());
+
 app.get('/', (req, res) => {
     res.send('HELLO WORLD!');
 });
@@ -53,20 +58,178 @@ router.get('/login', function (req, res) {
 		res.end(JSON.stringify(result)); // Result in JSON format
 	});
 });
+
+
+
+
 //create new user
+router.post('/postuserbody', async (req, res) => {
+	var userID = req.body.userID
+    var email = req.body.email
+    var password = req.body.password
+    var firstName = req.body.firstName
+    var lastName = req.body.lastName
+    
+	 con.query("INSERT INTO users (userID, email, password, firstName, lastName) VALUES (?,?,?,?,?)", [userID, email, password, firstName, lastName],function (err, result, fields) {
+		if (err) throw err;
+		res.end(JSON.stringify(result)); // Result in JSON format
+	 });
+});
+
+
 //get user by user id
+app.get('/getuser/:userID', function (req, res) {
+    var userID = req.params.userID
+    
+    con.query("SELECT * FROM users WHERE userID = ?",userID, function (err, result, fields) {
+        if (err) throw err;
+		res.end(JSON.stringify(result)); // Result in JSON format
+    });
+});
+
+
 //get user by email
+router.get('/getuser/:email', function (req, res) {
+    var email = req.params.email
+    
+	con.query("SELECT * FROM users WHERE email = ?", email, function (err, result, fields) {
+		if (err) throw err;
+		res.end(JSON.stringify(result)); // Result in JSON format
+	});
+});
+
+
 //get all users
+router.get('getallusers', function(req, res) {
+    con.query("SELECT * FROM users", function(err, result, fields) {
+        if(err) throw err;
+        res.end(JSON.stringify(result));
+    }); 
+});
+
 
 //*****meetings table*****
 //create new meeting
+router.post('/postmeetingbody', async (req, res) => {
+	var meetingID = req.body.meetingID
+    var meetingName = req.body.meetingName
+    var isOnline = req.body.isOnline
+    var startTime = req.body.startTime
+    var endTime = req.body.endTime
+    var zoomCode = req.body.zoomCode
+    var zoomPassword = req.body.zoomPassword
+    var isOpen = req.body.isOpen
+    var maxParticipants = req.body.maxParticipants
+    var isCancelled = req.body.isCancelled
+    
+	 con.query("INSERT INTO meetings (meetingID, meetingName, isOnline, startTime, endTime, zoomCode, zoomPassword, isOpen, maxParticipants, isCancelled) VALUES (?,?,?,?,?,?,?,?,?,?)", [meetingID, meetingName, isOnline, startTime, endTime, zoomCode, zoomPassword, isOpen, maxParticipants, isCancelled],function (err, result, fields) {
+		if (err) throw err;
+		res.end(JSON.stringify(result)); // Result in JSON format
+	 });
+});
+
+
+
+
 //get meeting by id
+router.get('/getmeeting/:meetingID', function (req, res) {
+    var meetingID = req.params.meetingID
+    
+	con.query("SELECT * FROM meetings WHERE meetingID = ?", meetingID, function (err, result, fields) {
+		if (err) throw err;
+		res.end(JSON.stringify(result)); // Result in JSON format
+	});
+});
+
+
+
 //change zoom code
+router.put('/putmeetings/:meetingID', async (req, res) => {
+	var zoomCodeNew = req.body.zoomCode
+    var meetingID = req.params.meetingID
+
+	 con.query("UPDATE meetings SET zoomCode = ? WHERE meetingID = ?", [zoomCodeNew,meetingID],function (err, result, fields) {
+		if (err) throw err;
+		res.end(JSON.stringify(result)); // Result in JSON format
+	 });
+});
+
+
+
+
 //change zoom password
+router.put('/putmeetings/:meetingID', async (req, res) => {
+	var zoomPasswordNew = req.body.zoomPassword
+    var meetingID = req.params.meetingID
+
+	 con.query("UPDATE meetings SET zoomPassword = ? WHERE meetingID = ?", [zoomPasswordNew,meetingID],function (err, result, fields) {
+		if (err) throw err;
+		res.end(JSON.stringify(result)); // Result in JSON format
+	 });
+});
+
+
 //change meeting start time
+router.put('/putmeetings/:meetingID', async (req, res) => {
+	var startTimeNew = req.body.startTime
+    var meetingID = req.params.meetingID
+
+	 con.query("UPDATE meetings SET startTime = ? WHERE meetingID = ?", [startTimeNew,meetingID],function (err, result, fields) {
+		if (err) throw err;
+		res.end(JSON.stringify(result)); // Result in JSON format
+	 });
+});
+
 //change meeting end time
+router.put('/putmeetings/:meetingID', async (req, res) => {
+	var endTimeNew = req.body.endTime
+    var meetingID = req.params.meetingID
+
+	 con.query("UPDATE meetings SET endTime = ? WHERE meetingID = ?", [endTimeNew,meetingID],function (err, result, fields) {
+		if (err) throw err;
+		res.end(JSON.stringify(result)); // Result in JSON format
+	 });
+});
+
+
 //change meeting name
+router.put('/putmeetings/:meetingID', async (req, res) => {
+	var meetingNameNew = req.body.meetingName
+    var meetingID = req.params.meetingID
+
+	 con.query("UPDATE meetings SET meetingName = ? WHERE meetingID = ?", [meetingNameNew,meetingID],function (err, result, fields) {
+		if (err) throw err;
+		res.end(JSON.stringify(result)); // Result in JSON format
+	 });
+});
+
+
 //cancel meeting(mark is_cancelled as true and creates notification of type 6 sent from meeting host to all meeting participants)
+
+router.put('/putmeetings/:meetingID', async (req, res) => {
+
+    var meetingID = req.params.meetingID
+
+	 con.query("UPDATE meetings SET isCancelled = true WHERE meetingID = ?", [meetingID],function (err, result, fields) {
+		if (err) throw err;
+		res.end(JSON.stringify(result)); // Result in JSON format
+	 });
+});
+
+router.post('/postmeetingbody', async (req, res) => {
+	var notificationID = req.body.notificationID
+    var notificationTime = req.body.notificationTime
+//    var notificationType = req.body.notificationType
+    var sender = req.body.sender
+    var recipient = req.body.recipient
+    var meetingID = req.body.meetingID
+    
+	 con.query("INSERT INTO notifications (notificationID, notificationTime, notificationType, sender, recipient, meetingID) VALUES (?,?,6,?,?,?)", [notificationID, notificationTime, sender, recipient, meetingID],function (err, result, fields) {
+		if (err) throw err;
+		res.end(JSON.stringify(result)); // Result in JSON format
+	 });
+});
+
 
 //*****meetingMembers table*****
 //user adds self to meeting & creates notification of type 1 sent from joining user to host
