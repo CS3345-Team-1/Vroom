@@ -20,7 +20,6 @@ const SignOn = (props) => {
     useEffect(() => {
         const authUser = localStorage.getItem(LOCAL_STORAGE_KEY_USER)
         if (authUser && authUser !== 'undefined') {
-            setUser(authUser)
             history.push('/home')
         }
     }, [])

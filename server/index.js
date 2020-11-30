@@ -15,7 +15,7 @@ const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
 
 const isDev = process.env.NODE_ENV !== 'production';
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3306;
 
 // Multi-process to utilize all CPU cores.
 if (!isDev && cluster.isMaster) {
@@ -51,45 +51,18 @@ if (!isDev && cluster.isMaster) {
     var mysql = require('mysql');
 
     //Connect to MySQL
-        var db_config = {
+        var con = mysql.createConnection({
             host: "us-cdbr-east-02.cleardb.com",
             port: "3306",
             user: "b1ffbd17d2ae7c",
             password: "0485777d",
             database: "heroku_a1e2fe87fd75c8e"
-        };
-
-        var connection;
-
-    function handleDisconnect() {
-        connection = mysql.createConnection(db_config); // Recreate the connection, since
-                                                        // the old one cannot be reused.
-
-        connection.connect(function(err) {              // The server is either down
-            if(err) {                                     // or restarting (takes a while sometimes).
-                console.log('error when connecting to db:', err);
-                setTimeout(handleDisconnect, 2000); // We introduce a delay before attempting to reconnect,
-            }                                     // to avoid a hot loop, and to allow our node script to
-        });                                     // process asynchronous requests in the meantime.
-                                                // If you're also serving http, display a 503 error.
-        connection.on('error', function(err) {
-            console.log('db error', err);
-            if(err.code === 'PROTOCOL_CONNECTION_LOST') { // Connection to the MySQL server is usually
-                handleDisconnect();                         // lost due to either server restart, or a
-            } else {                                      // connnection idle timeout (the wait_timeout
-                throw err;                                  // server variable configures this)
-            }
         });
-    }
 
-    handleDisconnect()
-
-    var con = mysql.createConnection(db_config);
-
-    // //Open Connection
-    //     con.connect(function(err) {
-    //         if (err) throw err;
-    //     });
+    //Open Connection
+        con.connect(function(err) {
+            if (err) throw err;
+        });
 
     // create router
         var router = express.Router();
@@ -362,9 +335,9 @@ if (!isDev && cluster.isMaster) {
             });
         });
 
-    //PORT ENVIRONMENT VARIABLE
-        const port = process.env.PORT || 3306;
-        app.listen(port, () => console.log(`Listening on port ${port}..`));
+    // //PORT ENVIRONMENT VARIABLE
+    //     const port = process.env.PORT || 3306;
+    //     app.listen(port, () => console.log(`Listening on port ${port}..`));
 
     // All remaining requests return the React app, so it can handle routing.
     app.get('*', function(request, response) {
