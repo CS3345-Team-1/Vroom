@@ -1,12 +1,27 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 
 import * as BS from 'react-bootstrap'
 import * as Icon from 'react-bootstrap-icons'
-import { useParams } from 'react-router-dom'
+import {useHistory} from 'react-router-dom'
 
+
+const LOCAL_STORAGE_KEY_USER = 'vroom.authenticatedUser'
 
 const NavBar = (props) => {
     // const { url } = useParams()
+
+    const history = useHistory()
+
+    useEffect(() => {
+        const authUser = localStorage.getItem(LOCAL_STORAGE_KEY_USER)
+        if (!authUser || authUser === 'undefined')
+            history.push('/')
+    }, [])
+
+    const handleLogout = () => {
+        localStorage.removeItem(LOCAL_STORAGE_KEY_USER)
+        history.push('/')
+    }
 
     return (
         <BS.Navbar as={BS.Card.Header} bg='primary' variant='dark'>
@@ -64,7 +79,7 @@ const NavBar = (props) => {
                         </BS.Tooltip>
                     }
                 >
-                    <BS.Nav.Link href={'#'}>
+                    <BS.Nav.Link onClick={handleLogout}>
                         <Icon.Power className='header-icon' />
                     </BS.Nav.Link>
                 </BS.OverlayTrigger>

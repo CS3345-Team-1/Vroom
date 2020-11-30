@@ -9,6 +9,7 @@ import NewGroupInterface from '../components/newGroupInterface'
 import NewGroupMemberInterface from '../components/newGroupMemberInterface'
 import GroupMember from '../components/groupMember'
 import {User} from '../models/user'
+import NavBar from '../components/navBar'
 
 const LOCAL_STORAGE_KEY_G = 'vroom.groups'
 
@@ -132,27 +133,32 @@ const Groups = (props) => {
     }
 
     return (
-        <BS.Card.Body>
-            <div id='groups-header'>
-                <h4 id='meeting-list-header'>Contact Groups</h4>
-            </div>
+        <div id='content'>
+            <BS.Card>
+                <NavBar />
+                <BS.Card.Body>
+                    <div id='groups-header'>
+                        <h4 id='meeting-list-header'>Contact Groups</h4>
+                    </div>
 
-            <BS.Tab.Container id="list-group-tabs-example" defaultActiveKey="#1" ref={tabRef}>
-                <BS.Row>
-                    <GroupList />
-                    <BS.Tab.Content className={'group-content'}>
-                        <BS.Tab.Pane eventKey={'#1'}>
-                            <BS.Toast className={'meeting-toast'}>
-                                <BS.Toast.Body>
-                                    Select a group to see its members, or click <strong>New Group</strong>.
-                                </BS.Toast.Body>
-                            </BS.Toast>
-                        </BS.Tab.Pane>
-                        <GroupTabs />
-                    </BS.Tab.Content>
-                </BS.Row>
-            </BS.Tab.Container>
-        </BS.Card.Body>
+                    <BS.Tab.Container id="list-group-tabs-example" defaultActiveKey="#1" ref={tabRef}>
+                        <BS.Row>
+                            <GroupList />
+                            <BS.Tab.Content className={'group-content'}>
+                                <BS.Tab.Pane eventKey={'#1'}>
+                                    <BS.Toast className={'meeting-toast'}>
+                                        <BS.Toast.Body>
+                                            Select a group to see its members, or click <strong>New Group</strong>.
+                                        </BS.Toast.Body>
+                                    </BS.Toast>
+                                </BS.Tab.Pane>
+                                <GroupTabs />
+                            </BS.Tab.Content>
+                        </BS.Row>
+                    </BS.Tab.Container>
+                </BS.Card.Body>
+            </BS.Card>
+        </div>
     )
 }
 

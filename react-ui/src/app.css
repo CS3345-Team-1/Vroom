@@ -134,3 +134,24 @@
     width: 100%;
     justify-self: center;
 }
+
+#sign-on {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.sign-on-logo {
+    font-family: 'Oleo Script', cursive;
+    font-size: 5rem;
+    margin: 3rem 0;
+
+}
+
+#sign-on-form {
+    width: 50vw;
+
+}

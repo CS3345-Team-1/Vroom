@@ -19,6 +19,7 @@ import Groups from './views/groups'
 import { ROUTES } from './routes'
 import {User} from './models/user'
 import {Meeting} from './models/meeting'
+import { Api } from './api/api'
 
 // GLOBAL KEY FOR LOCAL STORAGE
 const LOCAL_STORAGE_KEY_M = 'vroom.meetings'
@@ -28,87 +29,20 @@ const LOCAL_STORAGE_KEY_G = 'vroom.groups'
 // const express = require('express')
 // const server = express()
 
+const LOCAL_STORAGE_KEY_USER = 'vroom.authenticatedUser'
 
 const App = () => {
-    // STATE LISTENERS
-    // const [meetings, setMeetings] = useState([])
-    // const [groups, setGroups] = useState([{
-    //     id: 1000000,
-    //     name: "My Awesome Group",
-    //     members: ["bob", "dave", "steve"]
-    // }])
-    // const [currentDate, setCurrentDate] = useState(new moment())
-
-
-    // // EFFECTS FOR LOCALSTORAGE READING, WRITING
-    // useEffect(() => {
-    //     const storedMeetings = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_M))
-    //     if (storedMeetings) setMeetings(storedMeetings)
-    // }, [])
-    //
-    // useEffect(() => {
-    //     const storedGroups = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_G))
-    //     if (storedGroups) setGroups(storedGroups)
-    // }, [])
-    //
-    // useEffect(() => {
-    //     localStorage.setItem(LOCAL_STORAGE_KEY_M, JSON.stringify(meetings))
-    // }, [meetings])
-    //
-    // useEffect(() => {
-    //     localStorage.setItem(LOCAL_STORAGE_KEY_G, JSON.stringify(groups))
-    // }, [groups])
-
-    // // REMOVES A CANCELED MEETING FROM LIST
-    // const handleCancel = (id) => {
-    //     const newMeetings = [...meetings]
-    //     setMeetings(newMeetings.filter(meeting => meeting.id !== id))
-    // }
-    //
-    // // REMOVES A DELETED GROUP FROM LIST
-    // const handleDelete = (id) => {
-    //     const newGroups = [...groups]
-    //     setMeetings(newGroups.filter(group => group.id !== id))
-    // }
 
     return (
-        <div id='content'>
-            <BS.Card>
-                {/*<NavBar />*/}
-
-                <Router>
-                    <NavBar />
-                    <Switch>
-                        {
-                            ROUTES.map(
-                                (route, index) => <Route key={ index } { ...route } />
-                            )
-                        }
-                    </Switch>
-                </Router>
-
-                {/*<Router>*/}
-                {/*    <Switch>*/}
-                {/*        <Route path='/home'>*/}
-                {/*            <Home*/}
-                {/*                meetings={meetings}*/}
-                {/*                setMeetings={(i) => setMeetings(i)}*/}
-                {/*                currentDate={currentDate}*/}
-                {/*                setCurrentDate={(i) => setCurrentDate(i)}*/}
-                {/*                handleCancel={handleCancel}*/}
-                {/*            />*/}
-                {/*        </Route>*/}
-                {/*        <Route path='/groups'>*/}
-                {/*            <Groups*/}
-                {/*                groups={groups}*/}
-                {/*                setGroups={(i) => setGroups(i)}*/}
-                {/*                handleDelete={handleDelete}*/}
-                {/*            />*/}
-                {/*        </Route>*/}
-                {/*    </Switch>*/}
-                {/*</Router>*/}
-            </BS.Card>
-        </div>
+        <Router>
+            <Switch>
+                {
+                    ROUTES.map(
+                        (route, index) => <Route key={ index } { ...route } />
+                    )
+                }
+            </Switch>
+        </Router>
     )
 }
 
