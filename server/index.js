@@ -22,6 +22,13 @@ if (!isDev && cluster.isMaster) {
 } else {
     const app = express();
 
+    app.all('*', function(req, res, next) {
+        if (req.headers['x-forwarded-proto'] != 'https')
+            res.redirect('https://' + req.headers.host + req.url)
+        else
+            next() /* Continue to other routes if we're not redirecting */
+    });
+
     const bodyParser = require('body-parser');
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(bodyParser.json());
