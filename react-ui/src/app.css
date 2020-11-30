@@ -57,6 +57,12 @@
     }
 }
 
+#groups-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+}
+
 .meeting-toast {
     min-width: 100%;
 }
@@ -90,4 +96,41 @@
 .notification-count {
     height: 1.2rem;
     font-size: small;
+}
+
+.groups-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.participant-options {
+    display: flex;
+    justify-content: space-around;
+}
+
+.group-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+.group-buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.group-content {
+    flex-grow: 1;
+}
+
+.group-tabs {
+    width: 100%;
+    justify-self: center;
 }

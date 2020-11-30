@@ -79,16 +79,24 @@ const ParticipantInterface = (props) => {
 
                 <BS.Modal.Body>
                     {/* NEW PARTICIPANT FIELD */}
-                    <BS.Form>
-                        <BS.Form.Group controlId='text'>
-                            <BS.Form.Control
-                                ref={nameRef}
-                                type='text'
-                                placeholder='Participant Name'
-                                autocomplete='off'
-                            />
-                        </BS.Form.Group>
-                    </BS.Form>
+                    <BS.Tabs defaultActiveKey="add-single" id="add-participant-tabs">
+                        <BS.Tab eventKey="add-single" title="Single Participant">
+                            <BS.Form>
+                                <BS.Form.Group controlId='text'>
+                                    <BS.Form.Control
+                                        ref={nameRef}
+                                        type='text'
+                                        placeholder='Participant Name'
+                                        autocomplete='off'
+                                    />
+                                </BS.Form.Group>
+                            </BS.Form>
+                        </BS.Tab>
+                        <BS.Tab eventKey="add-group" title="Add a Group">
+                            ADD A GROUP
+                        </BS.Tab>
+
+                    </BS.Tabs>
                 </BS.Modal.Body>
 
                 {/* ACTION BUTTONS */}
