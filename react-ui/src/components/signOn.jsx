@@ -58,7 +58,7 @@ const SignOn = (props) => {
                             <BS.Form.Group controlId="formBasicPassword">
                                 <BS.Form.Control type="password" placeholder="Password" ref={passRef} />
                             </BS.Form.Group>
-                            <BS.Button variant="success" onClick={handleSignOn} block>
+                            <BS.Button variant="success" onClick={handleSignOn} type='button' block>
                                 Sign In
                             </BS.Button>
                         </BS.Form>

@@ -153,5 +153,10 @@
 
 #sign-on-form {
     width: 50vw;
+}
 
+@media only screen and (max-width: 1000px) {
+    #sign-on-form {
+        width: 90vw;
+    }
 }
