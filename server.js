@@ -300,5 +300,5 @@ router.get('/notifications/:userID', function (req, res) {
 });
 
 //PORT ENVIRONMENT VARIABLE
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 3306;
 app.listen(port, () => console.log(`Listening on port ${port}..`));
