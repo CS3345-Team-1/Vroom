@@ -7,9 +7,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(bodyParser.raw());
 
-app.get('/', (req, res) => {
-    res.send('HELLO WORLD!');
-});
+// app.get('/', (req, res) => {
+//     res.send('HELLO WORLD!');
+// });
 
 //Connect to MySQL
 var mysql = require('mysql');
