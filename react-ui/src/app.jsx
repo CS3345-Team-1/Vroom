@@ -20,6 +20,7 @@ import { ROUTES } from './routes'
 import {User} from './models/user'
 import {Meeting} from './models/meeting'
 import { Api } from './api/api'
+import { LOCAL_STORAGE_KEY } from './config'
 
 // GLOBAL KEY FOR LOCAL STORAGE
 const LOCAL_STORAGE_KEY_M = 'vroom.meetings'
@@ -29,7 +30,6 @@ const LOCAL_STORAGE_KEY_G = 'vroom.groups'
 // const express = require('express')
 // const server = express()
 
-const LOCAL_STORAGE_KEY_USER = 'vroom.authenticatedUser'
 
 const App = () => {
 

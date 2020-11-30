@@ -151,12 +151,18 @@
 
 }
 
-#sign-on-form {
+.sign-on-form {
     width: 50vw;
 }
 
 @media only screen and (max-width: 1000px) {
-    #sign-on-form {
+    .sign-on-form {
         width: 90vw;
     }
+}
+
+.sign-on-carousel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }

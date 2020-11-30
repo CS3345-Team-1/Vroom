@@ -23,7 +23,7 @@ if (!isDev && cluster.isMaster) {
     const app = express();
 
     app.all('*', function(req, res, next) {
-        if (req.headers['x-forwarded-proto'] != 'https')
+        if (req.headers['x-forwarded-proto'] != 'https' && req.headers.host != 'localhost:3306')
             res.redirect('https://' + req.headers.host + req.url)
         else
             next() /* Continue to other routes if we're not redirecting */
@@ -115,13 +115,15 @@ if (!isDev && cluster.isMaster) {
 
     //create new user
     router.post('/postuserbody', async (req, res) => {
-        var userID = req.body.userID
         var email = req.body.email
         var password = req.body.password
         var firstName = req.body.firstName
         var lastName = req.body.lastName
 
-        con.query("INSERT INTO users (userID, email, password, firstName, lastName) VALUES (?,?,?,?,?)", [userID, email, password, firstName, lastName],function (err, result, fields) {
+        console.log(req.body)
+        console.log(req.query)
+
+        con.query("INSERT INTO users (email, password, firstName, lastName) VALUES (?,?,?,?)", [email, password, firstName, lastName],function (err, result, fields) {
             if (err) throw err;
             res.end(JSON.stringify(result)); // Result in JSON format
         });

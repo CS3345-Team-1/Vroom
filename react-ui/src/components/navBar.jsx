@@ -2,10 +2,9 @@ import React, {useEffect, useState} from 'react'
 
 import * as BS from 'react-bootstrap'
 import * as Icon from 'react-bootstrap-icons'
-import {useHistory} from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
-
-const LOCAL_STORAGE_KEY_USER = 'vroom.authenticatedUser'
+import { LOCAL_STORAGE_KEY } from '../config'
 
 const NavBar = (props) => {
     // const { url } = useParams()
@@ -13,13 +12,13 @@ const NavBar = (props) => {
     const history = useHistory()
 
     useEffect(() => {
-        const authUser = localStorage.getItem(LOCAL_STORAGE_KEY_USER)
-        if (!authUser || authUser === 'undefined')
+        const authUser = localStorage.getItem(LOCAL_STORAGE_KEY)
+        if (!authUser || authUser === 'undefined' || authUser === 'null')
             history.push('/')
     }, [])
 
     const handleLogout = () => {
-        localStorage.removeItem(LOCAL_STORAGE_KEY_USER)
+        localStorage.removeItem(LOCAL_STORAGE_KEY)
         history.push('/')
     }
 

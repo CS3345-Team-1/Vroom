@@ -1,8 +1,10 @@
 import axios from 'axios'
 
+import { AXIOS_BASE_URL } from '../config'
+
 export class Api {
 
-    url = 'https://db-gui-vroom.herokuapp.com/api'
+    url = AXIOS_BASE_URL
 
     config = {}
 
@@ -29,6 +31,18 @@ export class Api {
                     alert(e)
                     reject()
                 })
+        })
+    }
+
+    register(userID, email, password, firstName, lastName) {
+        return new Promise((resolve, reject) => {
+            console.log(userID + '\n' + email + '\n' + password + '\n' + firstName + '\n' + lastName)
+            axios.post(`${this.url}/postuserbody`, {userID: userID, firstName: firstName, lastName: lastName, email: email, password: password})
+                .then(x => resolve(x.data))
+                .catch(e => {
+                alert(e)
+                reject()
+            })
         })
     }
 
