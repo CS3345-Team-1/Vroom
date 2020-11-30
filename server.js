@@ -42,7 +42,7 @@ router.use(function(req, res, next) {
 app.use('/api', router);
 
 //*****users table*****
-//login
+//login <- fix it? does it work?
 router.get('/login', function (req, res) {
     var userID;
     let query = "select * from users where email = '" + req.query.email + "' and password = '" + req.query.password + "';";
@@ -59,9 +59,6 @@ router.get('/login', function (req, res) {
 	});
 });
 
-
-
-
 //create new user
 router.post('/postuserbody', async (req, res) => {
 	var userID = req.body.userID
@@ -76,7 +73,6 @@ router.post('/postuserbody', async (req, res) => {
 	 });
 });
 
-
 //get user by user id
 app.get('/getuser/:userID', function (req, res) {
     var userID = req.params.userID
@@ -86,7 +82,6 @@ app.get('/getuser/:userID', function (req, res) {
 		res.end(JSON.stringify(result)); // Result in JSON format
     });
 });
-
 
 //get user by email
 router.get('/getuser/:email', function (req, res) {
@@ -98,7 +93,6 @@ router.get('/getuser/:email', function (req, res) {
 	});
 });
 
-
 //get all users
 router.get('getallusers', function(req, res) {
     con.query("SELECT * FROM users", function(err, result, fields) {
@@ -106,7 +100,6 @@ router.get('getallusers', function(req, res) {
         res.end(JSON.stringify(result));
     }); 
 });
-
 
 //*****meetings table*****
 //create new meeting
@@ -128,9 +121,6 @@ router.post('/postmeetingbody', async (req, res) => {
 	 });
 });
 
-
-
-
 //get meeting by id
 router.get('/getmeeting/:meetingID', function (req, res) {
     var meetingID = req.params.meetingID
@@ -140,8 +130,6 @@ router.get('/getmeeting/:meetingID', function (req, res) {
 		res.end(JSON.stringify(result)); // Result in JSON format
 	});
 });
-
-
 
 //change zoom code
 router.put('/putmeetings/:meetingID', async (req, res) => {
@@ -154,9 +142,6 @@ router.put('/putmeetings/:meetingID', async (req, res) => {
 	 });
 });
 
-
-
-
 //change zoom password
 router.put('/putmeetings/:meetingID', async (req, res) => {
 	var zoomPasswordNew = req.body.zoomPassword
@@ -167,7 +152,6 @@ router.put('/putmeetings/:meetingID', async (req, res) => {
 		res.end(JSON.stringify(result)); // Result in JSON format
 	 });
 });
-
 
 //change meeting start time
 router.put('/putmeetings/:meetingID', async (req, res) => {
@@ -191,7 +175,6 @@ router.put('/putmeetings/:meetingID', async (req, res) => {
 	 });
 });
 
-
 //change meeting name
 router.put('/putmeetings/:meetingID', async (req, res) => {
 	var meetingNameNew = req.body.meetingName
@@ -203,13 +186,10 @@ router.put('/putmeetings/:meetingID', async (req, res) => {
 	 });
 });
 
-
 //cancel meeting(mark is_cancelled as true and creates notification of type 6 sent from meeting host to all meeting participants)
-
 router.put('/putmeetings/:meetingID', async (req, res) => {
-
-    var meetingID = req.params.meetingID
-
+	var meetingID = req.params.meetingID
+	
 	 con.query("UPDATE meetings SET isCancelled = true WHERE meetingID = ?", [meetingID],function (err, result, fields) {
 		if (err) throw err;
 		res.end(JSON.stringify(result)); // Result in JSON format
@@ -236,20 +216,88 @@ router.post('/postmeetingbody', async (req, res) => {
 //host adds another user to meeting & create notification of type 4 sent from host to joining user
 //remove self from a meeting & create notification of type 2 sent from leaving user to host
 //host removes participant from a meeting & create notification of type 5
+
 //get all meetings that a given userID is part of
+router.get('/meetingMembers/:userID', function (req, res) {
+	var userID = req.params.userID;
+	con.query("select * from meetings inner join meetingMembers on meetings.meetingID = meetingMembers.meetingID where meetingMembers.userID = ?", userID, function(err, result, fields) {
+		if (err) throw err;
+		res.end(JSON.stringify(result));
+	});
+});
+
+//get all users who are part of a given meeting
+router.get('/meetingMembers/:meetingID', function (req, res) {
+	var meetingID = req.params.meetingID;
+	con.query("select userID from meetingMembers where meetingID = ?", meetingID, function(err, result, fields) {
+		if (err) throw err;
+		res.end(JSON.stringify(result));
+	});
+});
+
 //get all comment messages for a given meetingID
+router.get('/meetingMessage/:meetingID', function (req, res) {
+	var meetingID = req.params.meetingID;
+	con.query("select message from meetingMembers where meetingID = ?", meetingID, function(err, result, fields) {
+		if (err) throw err;
+		res.end(JSON.stringify(result));
+	});
+});
 
 //*****groups table*****
 //create a new group
+router.post('/postgroupbody', async (req, res) => {
+	var groupID = req.body.groupID
+    var ownerID = req.body.ownerID
+    var groupName = req.body.groupName
+	 con.query("INSERT INTO groups (groupID, ownerID, groupName) VALUES (?,?,?)", [groupID, ownerID, groupName], function (err, result, fields) {
+		if (err) throw err;
+		res.end(JSON.stringify(result)); // Result in JSON format
+	 });
+});
 //rename a group
+router.put('/putgroupname', async (req, res) => {
+	var groupID = req.body.groupID
+	var newName = req.body.newName
+	con.query("UPDATE groups SET groupName = ? WHERE groupID = ?", [newName,groupID], function (err, result, fields) {
+		if (err) throw err;
+		res.end(JSON.stringify(result)); // Result in JSON format
+	});
+});
 //delete a group and remove all group members with matching group id from groupMembers table
 
 //*****groupMembers table*****
 //add a new group member
+router.post('/postmeetingmember', async (req, res) => {
+	var participantID = req.body.participantID
+    var meetingID = req.body.meetingID
+    var userID = req.body.userID
+    var isHost = req.body.isHost
+    var message = req.body.message
+    
+	 con.query("INSERT INTO meetingMembers (participantID, meetingID, userID, isHost, message) VALUES (?,?,?,?,?)", [participantID, meetingID, userID, isHost, message],function (err, result, fields) {
+		if (err) throw err;
+		res.end(JSON.stringify(result)); // Result in JSON format
+	 });
+});
 //remove a group member
+router.delete('/deletemember', async (req, res) => { 
+	var participantID = req.body.participantID
+	con.query("DELETE FROM meetingMembers WHERE participantID = ?", participantID, function (err, result, fields) {
+		if (err) return console.error(error.message);
+		res.end(JSON.stringify(result));   
+	});
+});
 
 //*****notifications table*****
 //get all notifications in which the recipient has a given userID
+router.get('/notifications/:userID', function (req, res) {
+	var uID = req.params.userID;
+	con.query("select * from notifications where recipient = ?", uID, function(err, result, fields) {
+		if (err) throw err;
+		res.end(JSON.stringify(result));
+	});
+});
 
 //PORT ENVIRONMENT VARIABLE
 const port = process.env.PORT || 8080;
