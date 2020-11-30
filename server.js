@@ -94,7 +94,7 @@ router.get('/getuser/:email', function (req, res) {
 });
 
 //get all users
-router.get('getallusers', function(req, res) {
+router.get('/getallusers', function(req, res) {
     con.query("SELECT * FROM users", function(err, result, fields) {
         if(err) throw err;
         res.end(JSON.stringify(result));
