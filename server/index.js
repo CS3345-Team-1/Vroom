@@ -61,7 +61,7 @@ if (!isDev && cluster.isMaster) {
 
     //Open Connection
         con.connect(function(err) {
-            if (err) throw err;
+            if (err) console.log(err);
         });
 
     // create router
