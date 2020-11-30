@@ -2,7 +2,7 @@ import axios from 'axios'
 
 export class Api {
 
-    url = 'https://db-gui-vroom.herokuapp.com/api'
+    url = 'http://db-gui-vroom.herokuapp.com/api'
 
     config = {}
 
