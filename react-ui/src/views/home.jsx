@@ -54,6 +54,7 @@ const Home = (props) => {
                         <HomeCalendar
                             meetings={meetings}
                             setMeetings={(i) => setMeetings(i)}
+                            setReadMeetings={(i) => setReadMeetings(i)}
                             currentDate={currentDate}
                             setCurrentDate={(i) => setCurrentDate(i)}
                         />

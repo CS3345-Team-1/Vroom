@@ -51,7 +51,7 @@ const HomeCalendar = (props) => {
                           onChange={date => props.setCurrentDate(date)}
                           renderDay={formatDay}
                 />
-                <NewMeetingInterface setMeetings={(i) => props.setMeetings(i)} currentDate={props.currentDate} setCurrentDate={(i) => props.setCurrentDate(i)} mainCal={dateRef}/>
+                <NewMeetingInterface setReadMeetings={(i) => props.setReadMeetings(i)} setMeetings={(i) => props.setMeetings(i)} currentDate={props.currentDate} setCurrentDate={(i) => props.setCurrentDate(i)} mainCal={dateRef}/>
             </BS.ToastBody>
         </BS.Toast>
     )

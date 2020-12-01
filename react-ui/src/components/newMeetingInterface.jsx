@@ -64,6 +64,7 @@ const NewMeetingInterface = (props) => {
             const passcode = passcodeRef.current.value !== '' ? passcodeRef.current.value : 'None'
             api.createMeeting(title,date,startTime,endTime,isOpen,maxParticipants,id,passcode,true)
                 .then(mtg => api.addHost(mtg.insertId, localStorage.getItem(LOCAL_STORAGE_KEY)))
+                .then(x => api.getUserMeetings(localStorage.getItem(LOCAL_STORAGE_KEY)).then((x) => props.setReadMeetings(x)))
             // api.addHost(mtg.meetingID, localStorage.getItem(LOCAL_STORAGE_KEY))
             // newMeeting.createOnline(uuidv4(), title, date, startTime, endTime, id, passcode, isOpen, maxParticipants)
         }
