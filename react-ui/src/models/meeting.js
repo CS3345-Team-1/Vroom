@@ -55,9 +55,9 @@ export class Meeting {
         console.log(tzoffset)
 
         this.isOnline = db.isOnline
-        this.date = new Date(db.startTime).toLocaleDateString()
-        this.startTime = new Date(db.startTime).toLocaleTimeString()
-        this.endTime = new Date(db.endTime).toLocaleTimeString()
+        this.date = new Date(db.date.slice(0,-1)).toLocaleDateString()
+        this.startTime = new Date(db.startTime.slice(0,-1)).toLocaleTimeString()
+        this.endTime = new Date(db.endTime.slice(0,-1)).toLocaleTimeString()
         this.id = db.meetingID
         this.title = db.meetingName
         this.isOpen = db.isOpen
