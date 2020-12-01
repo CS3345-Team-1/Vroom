@@ -242,7 +242,7 @@ if (!isDev && cluster.isMaster) {
         });
     });
 
-    //cancel meeting(mark is_cancelled as true and creates notification of type 6 sent from meeting host to all meeting participants)
+    //cancel meeting(mark is_cancelled as true)
     router.put('/putmeetings/:meetingID', async (req, res) => {
         var meetingID = req.params.meetingID
 
@@ -252,27 +252,7 @@ if (!isDev && cluster.isMaster) {
         });
     });
 
-    router.post('/postnotifbody', async (req, res) => {
-        var notificationID = req.body.notificationID
-        var notificationTime = req.body.notificationTime
-        // var notificationType = req.body.notificationType
-        var sender = req.body.sender
-        var recipient = req.body.recipient
-        var meetingID = req.body.meetingID
-
-        con.query("INSERT INTO notifications (notificationID, notificationTime, notificationType, sender, recipient, meetingID) VALUES (?,?,6,?,?,?)", [notificationID, notificationTime, sender, recipient, meetingID],function (err, result, fields) {
-            if (err) throw err;
-            res.end(JSON.stringify(result)); // Result in JSON format
-        });
-    });
-
-
     //*****meetingMembers table*****
-    //user adds self to meeting & creates notification of type 1 sent from joining user to host
-    //host adds another user to meeting & create notification of type 4 sent from host to joining user
-    //remove self from a meeting & create notification of type 2 sent from leaving user to host
-    //host removes participant from a meeting & create notification of type 5
-
     //add member to meeting
     router.post('/joinMeeting', async (req, res) => {
         var meetingId = req.body.meetingId
@@ -286,8 +266,8 @@ if (!isDev && cluster.isMaster) {
     });
 
     //remove member from meeting
-    router.delete('/deletegroupmember', async (req, res) => {
-        var participantID = req.body.participantID
+    router.delete('/deletemeetingmember/:participantID', async (req, res) => {
+        var participantID = req.params.participantID
         con.query("DELETE FROM meetingMembers WHERE participantID = ?", participantID, function (err, result, fields) {
             if (err) return console.error(error.message);
             res.end(JSON.stringify(result));
@@ -344,8 +324,8 @@ if (!isDev && cluster.isMaster) {
     });
     //delete a group and remove all group members with matching group id from groupMembers table
     //**this may not work
-    router.delete('/deletegroup', async (req, res) => {
-        var groupID = req.body.groupID
+    router.delete('/deletegroup:groupID', async (req, res) => {
+        var groupID = req.params.groupID
         con.query("DELETE FROM groupMembers WHERE groupID = ? UNION DELETE FROM groups where groupID = ?", [groupID, groupID], function (err, result, fields) {
             if (err) return console.error(error.message);
             res.end(JSON.stringify(result));
@@ -365,8 +345,8 @@ if (!isDev && cluster.isMaster) {
     });
 
     //remove a group member
-    router.delete('/deletegroupmember', async (req, res) => {
-        var memberID = req.body.memberID
+    router.delete('/deletegroupmember/:memberID', async (req, res) => {
+        var memberID = req.params.memberID
         con.query("DELETE FROM groupMembers WHERE memberID = ?", memberID, function (err, result, fields) {
             if (err) return console.error(error.message);
             res.end(JSON.stringify(result));
