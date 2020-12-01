@@ -50,11 +50,11 @@ const NewMeetingInterface = (props) => {
         const title = titleRef.current.value
         // const date = dateRef.current.state.inputValue
         const dField = dateRef.current.state.inputValue
-        const date = new Date(new Date(dField) - tzoffset).toISOString().slice(0, -1)
+        const date = new Date(new Date(dField) - tzoffset).toISOString()
         const sField = startTimeRef.current.state.inputValue
-        const startTime = new Date(new Date(dField + ' ' + sField) - tzoffset).toISOString().slice(0, -1)
+        const startTime = new Date(new Date(dField + ' ' + sField) - tzoffset).toISOString()
         const eField = endTimeRef.current.state.inputValue
-        const endTime = new Date(new Date(dField + ' ' + eField) - tzoffset).toISOString().slice(0, -1)
+        const endTime = new Date(new Date(dField + ' ' + eField) - tzoffset).toISOString()
         const isOpen = openRef.current.value
         const maxParticipants = maxRef.current.value
 

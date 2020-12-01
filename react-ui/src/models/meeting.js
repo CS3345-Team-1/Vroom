@@ -49,6 +49,7 @@ export class Meeting {
     }
 
     parseDetail = (db) => {
+        console.log(db)
         this.isOnline = db.isOnline
         this.date = new Date(db.startTime).toLocaleDateString()
         this.startTime = new Date(db.startTime).toLocaleTimeString()
