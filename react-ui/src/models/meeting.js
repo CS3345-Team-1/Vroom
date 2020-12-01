@@ -50,14 +50,10 @@ export class Meeting {
     }
 
     parseDetail = (db) => {
-        console.log(db)
-        const tzoffset = DEPLOYED ? ((new Date()).getTimezoneOffset() * 60000) : 0;
-        console.log(tzoffset)
-
         this.isOnline = db.isOnline
-        this.date = new Date(db.date.slice(0,-1)).toLocaleDateString()
-        this.startTime = new Date(db.startTime.slice(0,-1)).toLocaleTimeString()
-        this.endTime = new Date(db.endTime.slice(0,-1)).toLocaleTimeString()
+        this.date = DEPLOYED ? new Date(db.date.slice(0,-1)).toLocaleDateString() :new Date(db.date).toLocaleDateString()
+        this.startTime = DEPLOYED ? new Date(db.startTime.slice(0,-1)).toLocaleTimeString() : new Date(db.startTime).toLocaleTimeString()
+        this.endTime = DEPLOYED ? new Date(db.endTime.slice(0,-1)).toLocaleTimeString() : new Date(db.endTime).toLocaleTimeString()
         this.id = db.meetingID
         this.title = db.meetingName
         this.isOpen = db.isOpen
@@ -75,8 +71,6 @@ export class Meeting {
         }
         else
             this.notes = []
-
-        console.log(this)
         return this
     }
 
