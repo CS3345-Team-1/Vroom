@@ -34,6 +34,17 @@ export class Api {
         })
     }
 
+    getUserByEmail(id) {
+        return new Promise((resolve, reject) => {
+            axios.get(`${this.url}/userbyemail/${id}`, this.config)
+                .then(x => resolve(x.data))
+                .catch(e => {
+                    alert(e)
+                    reject()
+                })
+        })
+    }
+
     authenticate(email, password) {
         return new Promise((resolve, reject) => {
             axios.get(`${this.url}/login`, { params: {email: email, password: password}})
@@ -137,6 +148,17 @@ export class Api {
     addMember(meetingId, userId){
         return new Promise((resolve, reject) => {
             axios.post(`${this.url}/joinMeeting`, {meetingId: meetingId, userId: userId, isHost: false})
+                .then(x => resolve(x.data))
+                .catch(e => {
+                    alert(e)
+                    reject()
+                })
+        })
+    }
+
+    removeMember(participantId){
+        return new Promise((resolve, reject) => {
+            axios.delete(`${this.url}/deletemeetingmember/${participantId}`, this.config)
                 .then(x => resolve(x.data))
                 .catch(e => {
                     alert(e)

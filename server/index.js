@@ -191,7 +191,7 @@ if (!isDev && cluster.isMaster) {
     router.get('/getCompleteMeetings/:userID', function (req, res) {
         var userID = req.params.userID
 
-        con.query("SELECT meetings.*, (SELECT JSON_ARRAYAGG(JSON_OBJECT( 'first', users.firstName, 'last', users.lastName, 'id', comments.commentID, 'time', comments.`timestamp`, 'comment', comments.`comment`)) FROM users INNER JOIN comments ON users.userID = comments.authorID WHERE comments.meetingID = meetings.meetingID) AS 'comments', (SELECT JSON_ARRAYAGG(JSON_OBJECT('first', users.firstName, 'last', users.lastName, 'userId', users.userID, 'id', meetingmembers.participantID, 'isHost', meetingmembers.isHost)) FROM users INNER JOIN meetingmembers ON users.userID = meetingmembers.userID WHERE meetingmembers.meetingID = meetings.meetingID) AS 'participants' FROM meetings INNER JOIN meetingmembers ON meetings.meetingID = meetingmembers.meetingID INNER JOIN users ON meetingmembers.userID = users.userID WHERE meetings.meetingID = meetingmembers.meetingID AND meetingmembers.userID = ?", userID, function (err, result, fields) {
+        con.query("SELECT meetings.*, (SELECT JSON_ARRAYAGG(JSON_OBJECT( 'first', users.firstName, 'last', users.lastName, 'id', comments.commentID, 'time', comments.`timestamp`, 'comment', comments.`comment`)) FROM users INNER JOIN comments ON users.userID = comments.authorID WHERE comments.meetingID = meetings.meetingID) AS 'comments', (SELECT JSON_ARRAYAGG(JSON_OBJECT('email', users.email, 'first', users.firstName, 'last', users.lastName, 'userId', users.userID, 'id', meetingmembers.participantID, 'isHost', meetingmembers.isHost)) FROM users INNER JOIN meetingmembers ON users.userID = meetingmembers.userID WHERE meetingmembers.meetingID = meetings.meetingID) AS 'participants' FROM meetings INNER JOIN meetingmembers ON meetings.meetingID = meetingmembers.meetingID INNER JOIN users ON meetingmembers.userID = users.userID WHERE meetings.meetingID = meetingmembers.meetingID AND meetingmembers.userID = ?", userID, function (err, result, fields) {
             if (err) throw err;
             res.end(JSON.stringify(result)); // Result in JSON format
         });
@@ -279,7 +279,7 @@ if (!isDev && cluster.isMaster) {
     //remove member from meeting
     router.delete('/deletemeetingmember/:participantID', async (req, res) => {
         var participantID = req.params.participantID
-        con.query("DELETE FROM meetingMembers WHERE participantID = ?", participantID, function (err, result, fields) {
+        con.query("DELETE FROM meetingmembers WHERE participantID = ?", participantID, function (err, result, fields) {
             if (err) return console.error(error.message);
             res.end(JSON.stringify(result));
         });
