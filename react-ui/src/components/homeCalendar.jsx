@@ -10,7 +10,7 @@ const HomeCalendar = (props) => {
 
     const formatDay = (props, thisDate, selectedDate) => {
         const filtered = allMeetings.filter(meeting => {
-            return meeting.date === thisDate.format('L')
+            return meeting.date === thisDate.format('M/D/YYYY')
         })
 
         if (validDates(thisDate)) return (
@@ -34,7 +34,7 @@ const HomeCalendar = (props) => {
     // RETURNS DAYS ON WHICH MEETINGS ARE SCHEDULED
     const validDates = (current) => {
         const filtered = props.meetings.filter(meeting => {
-            return meeting.date === current.format('L')
+            return meeting.date === current.format('M/D/YYYY')
         })
 
         return filtered.length > 0

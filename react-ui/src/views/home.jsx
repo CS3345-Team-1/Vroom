@@ -5,13 +5,22 @@ import React, {useEffect, useState} from 'react'
 import moment from 'moment'
 import NavBar from '../components/navBar'
 
+import { LOCAL_STORAGE_KEY } from '../config'
+import {Api} from '../api/api'
+import {Meeting} from '../models/meeting'
+
 // GLOBAL KEY FOR LOCAL STORAGE
 const LOCAL_STORAGE_KEY_M = 'vroom.meetings'
 
 const Home = (props) => {
 
+    const api = new Api()
+
+    const [loaded, setLoaded] = useState(false)
     const [meetings, setMeetings] = useState([])
+    const [readMeetings, setReadMeetings] = useState([])
     const [currentDate, setCurrentDate] = useState(new moment())
+    const [testMeetings, setTestMeetings] = useState([])
 
     const handleCancel = (id) => {
         const newMeetings = [...meetings]
@@ -20,16 +29,24 @@ const Home = (props) => {
 
     // EFFECTS FOR LOCALSTORAGE READING, WRITING
     useEffect(() => {
-        const storedMeetings = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_M))
-        if (storedMeetings) setMeetings(storedMeetings)
+        api.getUserMeetings(localStorage.getItem(LOCAL_STORAGE_KEY)).then((x) => setReadMeetings(x))
     }, [])
 
     useEffect(() => {
-        localStorage.setItem(LOCAL_STORAGE_KEY_M, JSON.stringify(meetings))
+        setLoaded(true)
     }, [meetings])
+
+    useEffect(() => {
+        let parseMeetings = []
+        readMeetings.map((m) => parseMeetings.push(new Meeting().parse(m)))
+        setMeetings(parseMeetings)
+    }, [readMeetings])
+
+    if (!loaded && !meetings) return <></>
 
     return (
         <div id='content'>
+            {console.log(meetings)}
             <BS.Card>
                 <NavBar />
                 <BS.Card.Body>

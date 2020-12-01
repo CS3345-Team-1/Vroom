@@ -27,4 +27,22 @@ export class Meeting {
         this.participants = []
         this.notes = []
     }
+
+    parse = (db) => {
+        this.isOnline = db.isOnline
+        this.date = new Date(db.startTime).toLocaleDateString()
+        this.startTime = new Date(db.startTime).toLocaleTimeString()
+        this.endTime = new Date(db.endTime).toLocaleTimeString()
+        this.id = db.id
+        this.title = db.title
+        this.isOpen = db.isOpen
+        this.maxParticipants = db.maxParticipants
+        this.meetingID = db.meetingId
+        this.isCancelled = db.isCancelled
+        this.isHost = db.isHost
+        this.passcode = db.passcode
+        this.participants = []
+        this.notes = []
+        return this
+    }
 }

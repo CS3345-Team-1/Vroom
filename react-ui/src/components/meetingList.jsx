@@ -5,8 +5,18 @@ import Meeting from './meeting'
 
 
 const MeetingList = (props) => {
-    const filtered = props.meetings.filter(meeting => { return meeting.date === props.currentDate.format('L') })
+    let filtered
+    if (props.meetings) {
+        filtered = props.meetings.filter(meeting => {
+            return meeting.date === props.currentDate.format('M/D/YYYY')
+        })
+        console.log(filtered)
+    }
+    else
+        filtered = []
+    // const filtered = props.meetings.filter(meeting => { return meeting.date === props.currentDate.format('L') })
     const title = 'Meetings for ' + props.currentDate.format('dddd, MMMM Do')
+
 
     return(
         <div>

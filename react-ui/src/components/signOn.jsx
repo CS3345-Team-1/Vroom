@@ -65,10 +65,6 @@ const SignOn = (props) => {
         const email = newEmailRef.current.value
         const password = newPasswordRef.current.value
 
-        console.log('IN THE REACT FUNC')
-
-        console.log(userID + '\n' + email + '\n' + password + '\n' + first + '\n' + last)
-
 
         api.register(userID,email,password,first,last).then(x => {
             setUser(userID)
@@ -118,7 +114,6 @@ const SignOn = (props) => {
                         <h4>Sign Up</h4>
                         <BS.Card className='sign-on-form'>
                             <BS.Card.Body>
-                                {invalid ? <BS.Alert variant='danger'>Invalid E-mail or Password</BS.Alert> : null}
                                 <BS.Form>
                                     <BS.Row>
                                         <BS.Col>

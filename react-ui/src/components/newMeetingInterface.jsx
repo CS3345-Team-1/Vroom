@@ -10,9 +10,13 @@ import physical from '../img/physical.svg'
 import { Formik } from 'formik'
 import * as yup from 'yup'
 import {Meeting} from '../models/meeting'
+import {Api} from '../api/api'
+import {LOCAL_STORAGE_KEY} from '../config'
 
 
 const NewMeetingInterface = (props) => {
+
+    const api = new Api()
 
     // STATE LISTENER
     const [modalShow, setModalShow] = useState(false)
@@ -38,11 +42,17 @@ const NewMeetingInterface = (props) => {
 
     // NEW MEETING HANDLER
     const handleAddMeeting = () => {
+        console.log(startTimeRef.current.state.inputValue)
+        console.log(dateRef.current.state.inputValue)
         // GET FORM FIELD VALUES
         const title = titleRef.current.value
-        const date = dateRef.current.state.inputValue
-        const startTime = startTimeRef.current.state.inputValue
-        const endTime = endTimeRef.current.state.inputValue
+        // const date = dateRef.current.state.inputValue
+        const dField = dateRef.current.state.inputValue
+        const date = new Date(dField).toISOString()
+        const sField = startTimeRef.current.state.inputValue
+        const startTime = new Date(dField + ' ' + sField).toISOString()
+        const eField = endTimeRef.current.state.inputValue
+        const endTime = new Date(dField + ' ' + eField).toISOString()
         const isOpen = openRef.current.value
         const maxParticipants = maxRef.current.value
 
@@ -52,16 +62,19 @@ const NewMeetingInterface = (props) => {
         if (isZoom === true) {
             const id = idRef.current.value
             const passcode = passcodeRef.current.value !== '' ? passcodeRef.current.value : 'None'
-            newMeeting.createOnline(uuidv4(), title, date, startTime, endTime, id, passcode, isOpen, maxParticipants)
+            api.createMeeting(title,date,startTime,endTime,isOpen,maxParticipants,id,passcode,true)
+                .then(mtg => api.addHost(mtg.insertId, localStorage.getItem(LOCAL_STORAGE_KEY)))
+            // api.addHost(mtg.meetingID, localStorage.getItem(LOCAL_STORAGE_KEY))
+            // newMeeting.createOnline(uuidv4(), title, date, startTime, endTime, id, passcode, isOpen, maxParticipants)
         }
         else {
             const location = locationRef.current.value
             newMeeting.createInPerson(uuidv4(), title, date, startTime, endTime, location, isOpen, maxParticipants)
         }
 
-        props.setMeetings(prevMeetings => {
-            return [...prevMeetings, newMeeting]
-        })
+        // props.setMeetings(prevMeetings => {
+        //     return [...prevMeetings, newMeeting]
+        // })
 
         // // ADD NEW MEETING
         // props.setMeetings(prevTodos => {

@@ -160,8 +160,9 @@ if (!isDev && cluster.isMaster) {
     //*****meetings table*****
     //create new meeting
     router.post('/postmeetingbody', async (req, res) => {
-        var meetingID = req.body.meetingID
+        // var meetingID = req.body.meetingID
         var meetingName = req.body.meetingName
+        var date = req.body.date
         var isOnline = req.body.isOnline
         var startTime = req.body.startTime
         var endTime = req.body.endTime
@@ -171,7 +172,7 @@ if (!isDev && cluster.isMaster) {
         var maxParticipants = req.body.maxParticipants
         var isCancelled = req.body.isCancelled
 
-        con.query("INSERT INTO meetings (meetingID, meetingName, isOnline, startTime, endTime, zoomCode, zoomPassword, isOpen, maxParticipants, isCancelled) VALUES (?,?,?,?,?,?,?,?,?,?)", [meetingID, meetingName, isOnline, startTime, endTime, zoomCode, zoomPassword, isOpen, maxParticipants, isCancelled],function (err, result, fields) {
+        con.query("INSERT INTO meetings (meetingName, isOnline, date, startTime, endTime, zoomCode, zoomPassword, isOpen, maxParticipants, isCancelled) VALUES (?,?,?,?,?,?,?,?,?,?)", [meetingName, isOnline, date, startTime, endTime, zoomCode, zoomPassword, isOpen, maxParticipants, isCancelled],function (err, result, fields) {
             if (err) throw err;
             res.end(JSON.stringify(result)); // Result in JSON format
         });
@@ -252,7 +253,7 @@ if (!isDev && cluster.isMaster) {
         });
     });
 
-    router.post('/postmeetingbody', async (req, res) => {
+    router.post('/postnotifbody', async (req, res) => {
         var notificationID = req.body.notificationID
         var notificationTime = req.body.notificationTime
         // var notificationType = req.body.notificationType
@@ -273,10 +274,22 @@ if (!isDev && cluster.isMaster) {
     //remove self from a meeting & create notification of type 2 sent from leaving user to host
     //host removes participant from a meeting & create notification of type 5
 
+
+    router.post('/joinMeeting', async (req, res) => {
+        var meetingId = req.body.meetingId
+        var userId = req.body.userId
+        var isHost = req.body.isHost
+
+        con.query("INSERT INTO meetingmembers (meetingID, userID, isHost) VALUES (?,?,?)", [meetingId, userId, isHost],function (err, result, fields) {
+            if (err) throw err;
+            res.end(JSON.stringify(result)); // Result in JSON format
+        });
+    });
+
     //get all meetings that a given userID is part of
     router.get('/meetingMembers/:userID', function (req, res) {
         var userID = req.params.userID;
-        con.query("select * from meetings inner join meetingMembers on meetings.meetingID = meetingMembers.meetingID where meetingMembers.userID = ?", userID, function(err, result, fields) {
+        con.query("select * from meetings inner join meetingMembers on meetings.meetingID = meetingMembers.meetingID where meetingMembers.userID = ? ORDER BY meetings.startTime", userID, function(err, result, fields) {
             if (err) throw err;
             res.end(JSON.stringify(result));
         });
@@ -290,6 +303,15 @@ if (!isDev && cluster.isMaster) {
             res.end(JSON.stringify(result));
         });
     });
+
+    //get all meetings for a given user
+    router.get('/userMeetings/:userID', function(req, res) {
+        var userId = req.params.userID;
+        con.query("SELECT meetings.meetingID as id, meetings.meetingName as title, meetings.date as date, meetings.isOnline as isOnline, meetings.startTime as startTime, meetings.endTime as endTime, meetings.zoomCode as meetingId, meetings.zoomPassword as passcode, meetings.isOpen as isOpen, meetings.maxParticipants as maxParticipants, meetings.isCancelled as isCancelled, meetingmembers.isHost as isHost FROM meetingmembers INNER JOIN meetings ON meetingmembers.meetingID = meetings.meetingID WHERE meetingmembers.userID = ? ORDER BY meetings.startTime", userId, function(err, result, fields) {
+            if (err) throw err;
+            res.end(JSON.stringify(result));
+        });
+    })
 
     //get all comment messages for a given meetingID
     router.get('/meetingMessage/:meetingID', function (req, res) {
