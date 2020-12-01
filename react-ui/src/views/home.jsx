@@ -50,33 +50,8 @@ const Home = (props) => {
         api.getUserMeetingsDetailed(localStorage.getItem(LOCAL_STORAGE_KEY)).then((x) => setReadMeetings(x))
     }
 
-    const [thing, setThing] = useState()
-
-    useEffect(() => {
-        if(thing) {
-            thing.map(obj => {
-                if (obj.participants)
-                    obj.participants = JSON.parse(obj.participants)
-                else
-                    obj.participants = []
-                if (obj.comments)
-                    obj.comments = JSON.parse(obj.comments)
-                else
-                    obj.comments = []
-            })
-            console.log(thing)
-        }
-    }, [thing])
-
-    const theThing = () => {
-        api.getUserMeetingsDetailed(localStorage.getItem(LOCAL_STORAGE_KEY)).then(x => setThing(x))
-    }
-
-    if (!loaded) return <></>
-
     return (
         <div id='content'>
-            <BS.Button onClick={theThing}>Do the thing!</BS.Button>
             <BS.Card>
                 <NavBar />
                 <BS.Card.Body>
