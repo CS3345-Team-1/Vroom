@@ -67,7 +67,7 @@ const SignOn = (props) => {
 
 
         api.register(userID,email,password,first,last).then(x => {
-            setUser(userID)
+            setUser(x.insertId)
             history.push('/home')
         })
     }
