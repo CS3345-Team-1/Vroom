@@ -112,9 +112,20 @@ export class Api {
         })
     }
 
+    getGroupMembers(groupId){
+        return new Promise((resolve, reject) => {
+            axios.get(`${this.url}/groupMembers/${groupId}`, this.config)
+                .then(x => resolve(x.data))
+                .catch(e => {
+                    alert(e)
+                    reject()
+                })
+        })
+    }
+
     addGroup(groupId, ownerId, groupName){
         return new Promise((resolve, reject) => {
-            axios.post(`${this.url}/addGroup`, {groupId: groupId, ownerId: ownerId, groupName: groupName})
+            axios.post(`${this.url}/postgroupbody`, {groupId: groupId, ownerId: ownerId, groupName: groupName})
             .then(x => resolve(x.data))
             .catch(e => {
                 alert(e)
@@ -123,9 +134,9 @@ export class Api {
         })
     }
 
-    deleteGroup(groupId, ownerId){
+    deleteGroup(groupId){
         return new Promise((resolve, reject) => {
-            axios.post(`${this.url}/deleteGroup`, {groupId: groupId, ownerId: ownerId})
+            axios.post(`${this.url}/deleteGroup/${groupId}`, this.config)
             .then(x => resolve(x.data))
             .catch(e => {
                 alert(e)
@@ -134,9 +145,9 @@ export class Api {
         })
     }
 
-    renameGroup(groupId, ownerId){
+    renameGroup(groupId, newName){
         return new Promise((resolve, reject) => {
-            axios.post(`${this.url}/renameGroup`, {groupId: groupId, ownerId: ownerId})
+            axios.post(`${this.url}/putgroupname`, {groupId: groupId, newName: newName })
             .then(x => resolve(x.data))
             .catch(e => {
                 alert(e)
@@ -144,8 +155,27 @@ export class Api {
             })
         })
     }
-    // add group member - add group
-    // delete group member - delete group
-    // rename group
-    // comments routes for table -- add
+    
+    getComments(meetingId){
+        return new Promise((resolve, reject) => {
+            axios.get(`${this.url}/meetingMessage/${meetingId}`, this.config)
+                .then(x => resolve(x.data))
+                .catch(e => {
+                    alert(e)
+                    reject()
+                })
+        })
+    }
+
+    addComment(meetingId, authorId, timestamp, comment){
+        return new Promise((resolve, reject) => {
+            axios.post(`${this.url}/postcomment`, {meetingId: meetingId, authorId: authorId, timestamp: timestamp, comment: comment})
+            .then(x => resolve(x.data))
+            .catch(e => {
+                alert(e)
+                reject()
+            })
+        })
+    }
+    
 }
