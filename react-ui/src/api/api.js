@@ -79,4 +79,73 @@ export class Api {
         })
     }
 
+    addMember(meetingId, userId){
+        return new Promise((resolve, reject) => {
+            axios.post(`${this.url}/joinMeeting`, {meetingId: meetingId, userId: userId, isHost: false})
+                .then(x => resolve(x.data))
+                .catch(e => {
+                    alert(e)
+                    reject()
+                })
+        })
+    }
+
+    addGroupMember(memberId, groupId, userId){
+        return new Promise((resolve, reject) => {
+            axios.post(`${this.url}/addGroupMember`, {memberId: memberId, groupId: groupId, userId: userId})
+            .then(x => resolve(x.data))
+            .catch(e => {
+                alert(e)
+                reject()
+            })
+        })
+    }
+
+    deleteGroupMember(memberId, groupId, userId){
+        return new Promise((resolve, reject) => {
+            axios.post(`${this.url}/deleteGroupMember`, {memberId: memberId, groupId: groupId, userId: userId})
+            .then(x => resolve(x.data))
+            .catch(e => {
+                alert(e)
+                reject()
+            })
+        })
+    }
+
+    addGroup(groupId, ownerId, groupName){
+        return new Promise((resolve, reject) => {
+            axios.post(`${this.url}/addGroup`, {groupId: groupId, ownerId: ownerId, groupName: groupName})
+            .then(x => resolve(x.data))
+            .catch(e => {
+                alert(e)
+                reject()
+            })
+        })
+    }
+
+    deleteGroup(groupId, ownerId){
+        return new Promise((resolve, reject) => {
+            axios.post(`${this.url}/deleteGroup`, {groupId: groupId, ownerId: ownerId})
+            .then(x => resolve(x.data))
+            .catch(e => {
+                alert(e)
+                reject()
+            })
+        })
+    }
+
+    renameGroup(groupId, ownerId){
+        return new Promise((resolve, reject) => {
+            axios.post(`${this.url}/renameGroup`, {groupId: groupId, ownerId: ownerId})
+            .then(x => resolve(x.data))
+            .catch(e => {
+                alert(e)
+                reject()
+            })
+        })
+    }
+    // add group member - add group
+    // delete group member - delete group
+    // rename group
+    // comments routes for table -- add
 }
