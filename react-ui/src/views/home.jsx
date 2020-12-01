@@ -23,8 +23,7 @@ const Home = (props) => {
     const [testMeetings, setTestMeetings] = useState([])
 
     const handleCancel = (id) => {
-        const newMeetings = [...meetings]
-        setMeetings(newMeetings.filter(meeting => meeting.id !== id))
+        api.cancelMeeting(id).then((x) => updateMeetings())
     }
 
     // EFFECTS FOR LOCALSTORAGE READING, WRITING
@@ -33,16 +32,23 @@ const Home = (props) => {
     }, [])
 
     useEffect(() => {
-        setLoaded(true)
-    }, [meetings])
-
-    useEffect(() => {
         let parseMeetings = []
         readMeetings.map((m) => parseMeetings.push(new Meeting().parse(m)))
+        parseMeetings.map((m) => api.getComments(m.id).then(x => m.parseComments(x)))
         setMeetings(parseMeetings)
+        // setMeetings(parseMeetings)
     }, [readMeetings])
 
-    if (!loaded && !meetings) return <></>
+    useEffect(() => {
+        setTimeout(setLoaded,1000, true)
+    }, [meetings])
+
+
+    const updateMeetings = () => {
+        api.getUserMeetings(localStorage.getItem(LOCAL_STORAGE_KEY)).then((x) => setReadMeetings(x))
+    }
+
+    if (!loaded) return <></>
 
     return (
         <div id='content'>
@@ -54,12 +60,15 @@ const Home = (props) => {
                         <HomeCalendar
                             meetings={meetings}
                             setMeetings={(i) => setMeetings(i)}
-                            setReadMeetings={(i) => setReadMeetings(i)}
+                            // setReadMeetings={(i) => setReadMeetings(i)}
+                            updateMeetings={updateMeetings}
                             currentDate={currentDate}
                             setCurrentDate={(i) => setCurrentDate(i)}
                         />
                         <div style={{flexBasis: '65%'}}>
                             <MeetingList
+                                updateMeetings={updateMeetings}
+                                setReadMeetings={(i) => setReadMeetings(i)}
                                 meetings={meetings}
                                 handleCancel={handleCancel}
                                 setMeetings={(i) => setMeetings(i)}

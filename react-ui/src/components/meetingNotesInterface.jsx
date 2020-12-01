@@ -1,14 +1,24 @@
-import React, { useRef } from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 
 import * as BS from 'react-bootstrap'
 import {v4 as uuidv4} from 'uuid'
 import * as Icon from 'react-bootstrap-icons'
 import Note from './note'
+import {Api} from '../api/api'
+import {LOCAL_STORAGE_KEY} from '../config'
 
 
 const MeetingNotesInterface = (props) => {
+    const api = new Api()
+
+    const [comments, setComments] = useState(props.notes)
+
     // STATE LISTENER
     const [modalShow, setModalShow] = React.useState(false)
+
+    useEffect(() => {
+        setComments(props.meeting.notes)
+    })
 
     // FORM TRACKING REFS
     const nameRef = useRef()
@@ -20,34 +30,39 @@ const MeetingNotesInterface = (props) => {
 
     // ADD NOTE HANDLER
     const handleAddNote = (e) => {
+        console.log(props)
+
         // GET FORM VALUES
-        const name = nameRef.current.value
+        const id = props.meeting.id
+        const author = localStorage.getItem(LOCAL_STORAGE_KEY)
         const note = noteRef.current.value
+        const time = new Date().toISOString()
+
 
         // DO NOTHING WHEN IF FIELDS ARE BLANK
-        if (name === '' || note === '') return
+        if (note === '') return
 
-        // CREATE A NEW NOTE
-        const newNote = {
-            id: uuidv4(),
-            name: name,
-            note: note,
-            time: new Date().toLocaleString()
-        }
+        // // CREATE A NEW NOTE
+        // const newNote = {
+        //     name: name,
+        //     note: note,
+        //     time: new Date().toISOString()
+        // }
 
         // ADD THE NOTE TO THE MEETING AND RESET STATE
-        props.meeting.notes.push(newNote)
-        props.setNotes(prevNotes => {
-            return [...prevNotes, newNote]
-        })
+        // props.meeting.notes.push(newNote)
+        // props.setNotes(prevNotes => {
+        //     return [...prevNotes, newNote]
+        // })
+        api.addComment(id, author, time, note)
+            .then(x => props.updateMeetings())
+            .finally(x => setComments(props.meeting.notes))
 
         // RESET FORM FIELDS
-        nameRef.current.value = null
         noteRef.current.value = null
-
-        // SAVE MEETINGS STATE
-        props.setMeetings(meetings => { return [...meetings] })
     }
+
+    if (!comments) return <></>
 
     return (
         <>
@@ -63,7 +78,7 @@ const MeetingNotesInterface = (props) => {
             >
                 <BS.Button variant={'link'} className={'shadow-none'} onClick={handleShow}>
                     <Icon.ChatRightText />
-                    <BS.Badge>{props.meeting.notes.length}</BS.Badge>
+                    <BS.Badge>{comments.length}</BS.Badge>
                 </BS.Button>
             </BS.OverlayTrigger>
 
@@ -85,8 +100,8 @@ const MeetingNotesInterface = (props) => {
                 <BS.Modal.Body>
                     {/* DISPLAY ALL CURRENT NOTES */}
                     {
-                        props.meeting.notes.length > 0 ?
-                            props.meeting.notes.map(note => {
+                        comments.length > 0 ?
+                            comments.map(note => {
                                 return <Note key={note.id} note={note} />
                             })
                         :
@@ -101,16 +116,6 @@ const MeetingNotesInterface = (props) => {
                     <hr />
                     <h5>Add a Note</h5>
                     <BS.Form>
-                        {/* TEMPORARY NAME FIELD UNTIL CURRENT USER CAN BE READ FROM DB */}
-                        <BS.Form.Group controlId='text'>
-                            <BS.Form.Control
-                                ref={nameRef}
-                                type='text'
-                                placeholder='Name'
-                                autocomplete='off'
-                            />
-                        </BS.Form.Group>
-
                         {/* NOTE FIELD */}
                         <BS.Form.Group controlId='text'>
                             <BS.Form.Control

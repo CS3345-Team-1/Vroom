@@ -4,9 +4,12 @@ import * as BS from 'react-bootstrap'
 import * as Icon from 'react-bootstrap-icons'
 import {CopyToClipboard} from 'react-copy-to-clipboard'
 import CopiedBadge from './copiedBadge'
+import {Api} from '../api/api'
 
 
 const MeetingIDInterface = (props) => {
+    const api = new Api()
+
     // STATE LISTENER
     const [modalShow, setModalShow] = React.useState(false)
     const [copyAlert, setCopyAlert] = React.useState(false)
@@ -30,8 +33,9 @@ const MeetingIDInterface = (props) => {
         }
 
         // UPDATE MEETING ID AND STATE
-        props.meeting.meetingID = newID
-        props.setMeetings(meetings => { return [...meetings] })
+        // props.meeting.meetingID = newID
+        // props.setMeetings(meetings => { return [...meetings] })
+        api.changeZoomId(props.meeting.id, newID).then((x) => props.updateMeetings())
 
         // CLOSE MODAL
         handleClose()

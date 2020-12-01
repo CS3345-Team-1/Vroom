@@ -24,7 +24,7 @@ const Meeting = (props) => {
 
     useEffect(() => {
         const currentNotes = props.meeting.notes
-        setParticipants(currentNotes)
+        setNotes(currentNotes)
     }, [props.meeting.notes])
 
     // MEETING CANCELLATION HANDLER
@@ -143,9 +143,11 @@ const Meeting = (props) => {
                             </BS.OverlayTrigger>
                             <ExportToCalendar />
                             <MeetingNotesInterface
+                                updateMeetings={props.updateMeetings}
                                 meeting={props.meeting}
                                 setNotes={(i) => setNotes(i)}
                                 setMeetings={(i) => props.setMeetings(i)}
+                                notes={notes}
                             />
 
                         </small>
@@ -157,18 +159,18 @@ const Meeting = (props) => {
                             <div>
                                 <div className='meeting-card-line'>
                                     <span className='meeting-text'>Zoom Meeting ID: </span>
-                                    <MeetingIDInterface meeting={props.meeting} setMeetings={(i) => props.setMeetings(i)} />
+                                    <MeetingIDInterface updateMeetings={props.updateMeetings} meeting={props.meeting} setMeetings={(i) => props.setMeetings(i)} />
                                 </div>
                                 <div className='meeting-card-line'>
                                     <span className='meeting-text'>Meeting Passcode: </span>
-                                    <EditPasscodeInterface meeting={props.meeting} setMeetings={(i) => props.setMeetings(i)} />
+                                    <EditPasscodeInterface updateMeetings={props.updateMeetings} meeting={props.meeting} setMeetings={(i) => props.setMeetings(i)} />
                                 </div>
                                 <div className='meeting-card-line'>
                                     <span className='meeting-text'>Participants: </span>
                                     {props.meeting.participants.map(participant => {
-                                        return <Participant participant={participant} meeting={props.meeting} setMeetings={(i) => props.setMeetings(i)} />
+                                        return <Participant updateMeetings={props.updateMeetings} participant={participant} meeting={props.meeting} setMeetings={(i) => props.setMeetings(i)} />
                                     })}
-                                    <ParticipantInterface meeting={props.meeting} setParticipants={(i) => setParticipants(i)} setMeetings={(i) => props.setMeetings(i)}/>
+                                    <ParticipantInterface updateMeetings={props.updateMeetings} meeting={props.meeting} setParticipants={(i) => setParticipants(i)} setMeetings={(i) => props.setMeetings(i)}/>
                                 </div>
                             </div>
                             <CancelButton />

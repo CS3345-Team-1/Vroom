@@ -129,17 +129,17 @@ if (!isDev && cluster.isMaster) {
     });
 
     //get user by user id
-    app.get('/getuser/:userID', function (req, res) {
+    router.get('/userbyid/:userID', function (req, res) {
         var userID = req.params.userID
 
-        con.query("SELECT * FROM users WHERE userID = ?",userID, function (err, result, fields) {
+        con.query("SELECT * FROM users WHERE userID = ?", userID, function (err, result, fields) {
             if (err) throw err;
             res.end(JSON.stringify(result)); // Result in JSON format
         });
     });
 
     //get user by email
-    router.get('/getuser/:email', function (req, res) {
+    router.get('/userbyemail/:email', function (req, res) {
         var email = req.params.email
 
         con.query("SELECT * FROM users WHERE email = ?", email, function (err, result, fields) {
@@ -188,7 +188,7 @@ if (!isDev && cluster.isMaster) {
     });
 
     //change zoom code
-    router.put('/putmeetings/:meetingID', async (req, res) => {
+    router.put('/changeid/:meetingID', async (req, res) => {
         var zoomCodeNew = req.body.zoomCode
         var meetingID = req.params.meetingID
 
@@ -199,7 +199,7 @@ if (!isDev && cluster.isMaster) {
     });
 
     //change zoom password
-    router.put('/putmeetings/:meetingID', async (req, res) => {
+    router.put('/changepasscode/:meetingID', async (req, res) => {
         var zoomPasswordNew = req.body.zoomPassword
         var meetingID = req.params.meetingID
 
@@ -243,7 +243,7 @@ if (!isDev && cluster.isMaster) {
     });
 
     //cancel meeting(mark is_cancelled as true)
-    router.put('/putmeetings/:meetingID', async (req, res) => {
+    router.put('/cancelmeeting/:meetingID', async (req, res) => {
         var meetingID = req.params.meetingID
 
         con.query("UPDATE meetings SET isCancelled = true WHERE meetingID = ?", [meetingID],function (err, result, fields) {

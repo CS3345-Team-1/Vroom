@@ -8,9 +8,8 @@ const MeetingList = (props) => {
     let filtered
     if (props.meetings) {
         filtered = props.meetings.filter(meeting => {
-            return meeting.date === props.currentDate.format('M/D/YYYY')
+            return meeting.date === props.currentDate.format('M/D/YYYY') && !meeting.isCancelled
         })
-        console.log(filtered)
     }
     else
         filtered = []
@@ -25,7 +24,7 @@ const MeetingList = (props) => {
                 filtered.length > 0 ?
                     // CREATE MEETING COMPONENT FOR EACH SCHEDULED MEETING
                     filtered.map(meeting => {
-                        return <Meeting key={meeting.id} handleCancel={props.handleCancel} meeting={meeting} setMeetings={(i) => props.setMeetings(i)} />
+                        return <Meeting key={meeting.id} updateMeetings={props.updateMeetings} handleCancel={props.handleCancel} meeting={meeting} setMeetings={(i) => props.setMeetings(i)} />
                     })
                     :
                         <BS.Toast className='meeting-toast'>

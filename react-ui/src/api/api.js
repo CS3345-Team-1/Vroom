@@ -23,6 +23,17 @@ export class Api {
         })
     }
 
+    getUser(id) {
+        return new Promise((resolve, reject) => {
+            axios.get(`${this.url}/userbyid/${id}`, this.config)
+                .then(x => resolve(x.data))
+                .catch(e => {
+                    alert(e)
+                    reject()
+                })
+        })
+    }
+
     authenticate(email, password) {
         return new Promise((resolve, reject) => {
             axios.get(`${this.url}/login`, { params: {email: email, password: password}})
@@ -60,6 +71,39 @@ export class Api {
     createMeeting(title, date, startTime, endTime, isOpen, maxParticipants, id, passcode, isOnline) {
         return new Promise((resolve, reject) => {
             axios.post(`${this.url}/postmeetingbody`, {meetingName: title, isOnline: isOnline, date: date, startTime: startTime, endTime: endTime, zoomCode: id, zoomPassword: passcode, isOpen: isOpen, maxParticipants: maxParticipants, isCancelled: false})
+                .then(x => resolve(x.data))
+                .catch(e => {
+                    alert(e)
+                    reject()
+                })
+        })
+    }
+
+    cancelMeeting(meetingId) {
+        return new Promise((resolve, reject) => {
+            axios.put(`${this.url}/cancelmeeting/${meetingId}`, this.config)
+                .then(x => resolve(x.data))
+                .catch(e => {
+                    alert(e)
+                    reject()
+                })
+        })
+    }
+
+    changeZoomId(meetingId, newZoomId) {
+        return new Promise((resolve, reject) => {
+            axios.put(`${this.url}/changeid/${meetingId}`, {zoomCode: newZoomId})
+                .then(x => resolve(x.data))
+                .catch(e => {
+                    alert(e)
+                    reject()
+                })
+        })
+    }
+
+    changePasscode(meetingId, newPasscode) {
+        return new Promise((resolve, reject) => {
+            axios.put(`${this.url}/changepasscode/${meetingId}`, {zoomPassword: newPasscode})
                 .then(x => resolve(x.data))
                 .catch(e => {
                     alert(e)
@@ -169,7 +213,7 @@ export class Api {
 
     addComment(meetingId, authorId, timestamp, comment){
         return new Promise((resolve, reject) => {
-            axios.post(`${this.url}/postcomment`, {meetingId: meetingId, authorId: authorId, timestamp: timestamp, comment: comment})
+            axios.post(`${this.url}/postcomment`, {meetingID: meetingId, authorID: authorId, timestamp: timestamp, comment: comment})
             .then(x => resolve(x.data))
             .catch(e => {
                 alert(e)

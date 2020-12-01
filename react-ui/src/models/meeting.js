@@ -1,3 +1,5 @@
+import {Comment} from './comment'
+
 export class Meeting {
     createOnline(id, title, date, startTime, endTime, meetingID, passcode, isOpen, maxParticipants) {
         this.isOnline = true
@@ -44,5 +46,9 @@ export class Meeting {
         this.participants = []
         this.notes = []
         return this
+    }
+
+    parseComments = (db) => {
+        db.map(comment => this.notes.push(new Comment().parse(comment)))
     }
 }

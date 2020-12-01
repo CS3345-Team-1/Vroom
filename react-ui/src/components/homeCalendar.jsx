@@ -34,7 +34,7 @@ const HomeCalendar = (props) => {
     // RETURNS DAYS ON WHICH MEETINGS ARE SCHEDULED
     const validDates = (current) => {
         const filtered = props.meetings.filter(meeting => {
-            return meeting.date === current.format('M/D/YYYY')
+            return meeting.date === current.format('M/D/YYYY')  && !meeting.isCancelled
         })
 
         return filtered.length > 0
@@ -51,7 +51,7 @@ const HomeCalendar = (props) => {
                           onChange={date => props.setCurrentDate(date)}
                           renderDay={formatDay}
                 />
-                <NewMeetingInterface setReadMeetings={(i) => props.setReadMeetings(i)} setMeetings={(i) => props.setMeetings(i)} currentDate={props.currentDate} setCurrentDate={(i) => props.setCurrentDate(i)} mainCal={dateRef}/>
+                <NewMeetingInterface updateMeetings={props.updateMeetings} setMeetings={(i) => props.setMeetings(i)} currentDate={props.currentDate} setCurrentDate={(i) => props.setCurrentDate(i)} mainCal={dateRef}/>
             </BS.ToastBody>
         </BS.Toast>
     )
