@@ -20,22 +20,42 @@ const Participant = (props) => {
         api.removeMember(props.participant.id).then(props.updateMeetings)
     }
 
-    return(
-        // DISPLAY PARTICIPANT WITH TOOLTIP
-        <BS.OverlayTrigger
-            trigger='hover'
-            placement='bottom'
-            overlay={
-                <BS.Tooltip id={`tooltip-bottom`}>
-                    Click to Remove
-                </BS.Tooltip>
-            }
-        >
-            {/* REMOVE PARTICIPANT ON CLICK */}
-            <BS.Button as={BS.Badge} pill variant='secondary' onClick={handleRemove} className='participant-label'>
-                {props.participant.first}
-            </BS.Button>
-        </BS.OverlayTrigger>
+    return (
+        <>
+        {
+            props.participant.isHost ? (
+                <BS.OverlayTrigger
+                    trigger='hover'
+                    placement='bottom'
+                    overlay={
+                        <BS.Tooltip id={`tooltip-bottom`}>
+                            Meeting Host
+                        </BS.Tooltip>
+                    }
+                >
+                    {/* REMOVE PARTICIPANT ON CLICK */}
+                    <BS.Button as={BS.Badge} pill variant='outline-secondary' className='participant-label'>
+                        {props.participant.first}
+                    </BS.Button>
+                </BS.OverlayTrigger>
+            ) : (
+                <BS.OverlayTrigger
+                    trigger='hover'
+                    placement='bottom'
+                    overlay={
+                        <BS.Tooltip id={`tooltip-bottom`}>
+                            Click to Remove
+                        </BS.Tooltip>
+                    }
+                >
+                    {/* REMOVE PARTICIPANT ON CLICK */}
+                    <BS.Button as={BS.Badge} pill variant='secondary' onClick={handleRemove} className='participant-label'>
+                        {props.participant.first}
+                    </BS.Button>
+                </BS.OverlayTrigger>
+            )
+        }
+    </>
     )
 }
 

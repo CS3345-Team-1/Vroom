@@ -56,19 +56,19 @@ const NavBar = (props) => {
                         <Icon.People className='header-icon' />
                     </BS.Nav.Link>
                 </BS.OverlayTrigger>
-                <BS.OverlayTrigger
-                    key='bottom'
-                    placement='bottom'
-                    overlay={
-                        <BS.Tooltip id={`tooltip-notifs`}>
-                            Notifications
-                        </BS.Tooltip>
-                    }
-                >
-                    <BS.Nav.Link href={'#'}>
-                        <Icon.Bell className='header-icon' />
-                    </BS.Nav.Link>
-                </BS.OverlayTrigger>
+                {/*<BS.OverlayTrigger*/}
+                {/*    key='bottom'*/}
+                {/*    placement='bottom'*/}
+                {/*    overlay={*/}
+                {/*        <BS.Tooltip id={`tooltip-notifs`}>*/}
+                {/*            Notifications*/}
+                {/*        </BS.Tooltip>*/}
+                {/*    }*/}
+                {/*>*/}
+                {/*    <BS.Nav.Link href={'#'}>*/}
+                {/*        <Icon.Bell className='header-icon' />*/}
+                {/*    </BS.Nav.Link>*/}
+                {/*</BS.OverlayTrigger>*/}
                 <BS.OverlayTrigger
                     key='bottom'
                     placement='bottom'
