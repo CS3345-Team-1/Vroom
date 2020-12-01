@@ -28,31 +28,55 @@ const Home = (props) => {
 
     // EFFECTS FOR LOCALSTORAGE READING, WRITING
     useEffect(() => {
-        api.getUserMeetings(localStorage.getItem(LOCAL_STORAGE_KEY)).then((x) => setReadMeetings(x))
+        // api.getUserMeetings(localStorage.getItem(LOCAL_STORAGE_KEY)).then((x) => setReadMeetings(x))
+        api.getUserMeetingsDetailed(localStorage.getItem(LOCAL_STORAGE_KEY)).then((x) => setReadMeetings(x))
     }, [])
 
     useEffect(() => {
         let parseMeetings = []
-        readMeetings.map((m) => parseMeetings.push(new Meeting().parse(m)))
-        parseMeetings.map((m) => api.getComments(m.id).then(x => m.parseComments(x)))
+        // readMeetings.map((m) => parseMeetings.push(new Meeting().parse(m)))
+        readMeetings.map(m => parseMeetings.push(new Meeting().parseDetail(m)))
+        // parseMeetings.map((m) => api.getComments(m.id).then(x => m.parseComments(x)))
         setMeetings(parseMeetings)
-        // setMeetings(parseMeetings)
     }, [readMeetings])
 
     useEffect(() => {
-        setTimeout(setLoaded,1000, true)
+        setLoaded(true)
     }, [meetings])
 
 
     const updateMeetings = () => {
-        api.getUserMeetings(localStorage.getItem(LOCAL_STORAGE_KEY)).then((x) => setReadMeetings(x))
+        // api.getUserMeetings(localStorage.getItem(LOCAL_STORAGE_KEY)).then((x) => setReadMeetings(x))
+        api.getUserMeetingsDetailed(localStorage.getItem(LOCAL_STORAGE_KEY)).then((x) => setReadMeetings(x))
+    }
+
+    const [thing, setThing] = useState()
+
+    useEffect(() => {
+        if(thing) {
+            thing.map(obj => {
+                if (obj.participants)
+                    obj.participants = JSON.parse(obj.participants)
+                else
+                    obj.participants = []
+                if (obj.comments)
+                    obj.comments = JSON.parse(obj.comments)
+                else
+                    obj.comments = []
+            })
+            console.log(thing)
+        }
+    }, [thing])
+
+    const theThing = () => {
+        api.getUserMeetingsDetailed(localStorage.getItem(LOCAL_STORAGE_KEY)).then(x => setThing(x))
     }
 
     if (!loaded) return <></>
 
     return (
         <div id='content'>
-            {console.log(meetings)}
+            <BS.Button onClick={theThing}>Do the thing!</BS.Button>
             <BS.Card>
                 <NavBar />
                 <BS.Card.Body>

@@ -68,6 +68,17 @@ export class Api {
         })
     }
 
+    getUserMeetingsDetailed(userID) {
+        return new Promise((resolve, reject) => {
+            axios.get(`${this.url}/getCompleteMeetings/${userID}`, this.config)
+                .then(x => resolve(x.data))
+                .catch(e => {
+                    alert(e)
+                    reject()
+                })
+        })
+    }
+
     createMeeting(title, date, startTime, endTime, isOpen, maxParticipants, id, passcode, isOnline) {
         return new Promise((resolve, reject) => {
             axios.post(`${this.url}/postmeetingbody`, {meetingName: title, isOnline: isOnline, date: date, startTime: startTime, endTime: endTime, zoomCode: id, zoomPassword: passcode, isOpen: isOpen, maxParticipants: maxParticipants, isCancelled: false})

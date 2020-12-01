@@ -48,6 +48,30 @@ export class Meeting {
         return this
     }
 
+    parseDetail = (db) => {
+        this.isOnline = db.isOnline
+        this.date = new Date(db.startTime).toLocaleDateString()
+        this.startTime = new Date(db.startTime).toLocaleTimeString()
+        this.endTime = new Date(db.endTime).toLocaleTimeString()
+        this.id = db.meetingID
+        this.title = db.meetingName
+        this.isOpen = db.isOpen
+        this.maxParticipants = db.maxParticipants
+        this.meetingID = db.zoomCode
+        this.isCancelled = db.isCancelled
+        this.passcode = db.zoomPassword
+        if (db.participants)
+            this.participants = JSON.parse(db.participants)
+        else
+            this.participants = []
+        if (db.comments)
+            this.notes = JSON.parse(db.comments)
+        else
+            this.notes = []
+        return this
+    }
+
+
     parseComments = (db) => {
         db.map(comment => this.notes.push(new Comment().parse(comment)))
     }

@@ -56,13 +56,10 @@ const MeetingNotesInterface = (props) => {
         // })
         api.addComment(id, author, time, note)
             .then(x => props.updateMeetings())
-            .finally(x => setComments(props.meeting.notes))
 
         // RESET FORM FIELDS
         noteRef.current.value = null
     }
-
-    if (!comments) return <></>
 
     return (
         <>
@@ -100,8 +97,8 @@ const MeetingNotesInterface = (props) => {
                 <BS.Modal.Body>
                     {/* DISPLAY ALL CURRENT NOTES */}
                     {
-                        comments.length > 0 ?
-                            comments.map(note => {
+                        props.meeting.notes.length > 0 ?
+                            props.meeting.notes.map(note => {
                                 return <Note key={note.id} note={note} />
                             })
                         :

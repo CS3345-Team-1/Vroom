@@ -47,11 +47,11 @@ if (!isDev && cluster.isMaster) {
     var mysql = require('mysql');
 
     var db_config = {
-        host: "us-cdbr-east-02.cleardb.com",
+        host: "de1tmi3t63foh7fa.cbetxkdyhwsb.us-east-1.rds.amazonaws.com",
         port: "3306",
-        user: "b1ffbd17d2ae7c",
-        password: "0485777d",
-        database: "heroku_a1e2fe87fd75c8e"
+        user: "aybtaplp5xw2pgv6",
+        password: "tazinfa0sg1zl86k",
+        database: "s9z1n09np8wpporb"
     };
 
     var con;
@@ -186,6 +186,17 @@ if (!isDev && cluster.isMaster) {
             res.end(JSON.stringify(result)); // Result in JSON format
         });
     });
+
+    //EXPERIMENTAL get all meetings for user with comments/participants
+    router.get('/getCompleteMeetings/:userID', function (req, res) {
+        var userID = req.params.userID
+
+        con.query("SELECT meetings.*, (SELECT JSON_ARRAYAGG(JSON_OBJECT( 'first', users.firstName, 'last', users.lastName, 'id', comments.commentID, 'time', comments.`timestamp`, 'comment', comments.`comment`)) FROM users INNER JOIN comments ON users.userID = comments.authorID WHERE comments.meetingID = meetings.meetingID) AS 'comments', (SELECT JSON_ARRAYAGG(JSON_OBJECT('first', users.firstName, 'last', users.lastName, 'userId', users.userID, 'id', meetingmembers.participantID, 'isHost', meetingmembers.isHost)) FROM users INNER JOIN meetingmembers ON users.userID = meetingmembers.userID WHERE meetingmembers.meetingID = meetings.meetingID) AS 'participants' FROM meetings INNER JOIN meetingmembers ON meetings.meetingID = meetingmembers.meetingID INNER JOIN users ON meetingmembers.userID = users.userID WHERE meetings.meetingID = meetingmembers.meetingID AND meetingmembers.userID = ?", userID, function (err, result, fields) {
+            if (err) throw err;
+            res.end(JSON.stringify(result)); // Result in JSON format
+        });
+    });
+
 
     //change zoom code
     router.put('/changeid/:meetingID', async (req, res) => {
