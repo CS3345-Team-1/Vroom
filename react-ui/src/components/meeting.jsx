@@ -137,6 +137,8 @@ const Meeting = (props) => {
                                     variant={'link'}
                                     className={'shadow-none'}
                                     href={'https://zoom.us/j/' + props.meeting.meetingID.replace(/\s/g,'')}
+                                    target={'_blank'}
+                                    rel={'noopener noreferrer'}
                                 >
                                     <Icon.Link45deg />
                                 </BS.Button>
