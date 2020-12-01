@@ -1,4 +1,5 @@
 import {Comment} from './comment'
+import {DEPLOYED} from '../config'
 
 export class Meeting {
     createOnline(id, title, date, startTime, endTime, meetingID, passcode, isOpen, maxParticipants) {
@@ -50,6 +51,9 @@ export class Meeting {
 
     parseDetail = (db) => {
         console.log(db)
+        const tzoffset = DEPLOYED ? ((new Date()).getTimezoneOffset() * 60000) : 0;
+        console.log(tzoffset)
+
         this.isOnline = db.isOnline
         this.date = new Date(db.startTime).toLocaleDateString()
         this.startTime = new Date(db.startTime).toLocaleTimeString()
@@ -71,6 +75,8 @@ export class Meeting {
         }
         else
             this.notes = []
+
+        console.log(this)
         return this
     }
 
