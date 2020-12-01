@@ -96,7 +96,6 @@ if (!isDev && cluster.isMaster) {
     // BEGIN API CALLS
 
     //*****users table*****
-    //login <- fix it? does it work?
     router.get('/login', function (req, res) {
         var userID;
         let query = "select * from users where email = '" + req.query.email + "' and password = '" + req.query.password + "';";
@@ -274,7 +273,7 @@ if (!isDev && cluster.isMaster) {
     //remove self from a meeting & create notification of type 2 sent from leaving user to host
     //host removes participant from a meeting & create notification of type 5
 
-
+    //add member to meeting
     router.post('/joinMeeting', async (req, res) => {
         var meetingId = req.body.meetingId
         var userId = req.body.userId
@@ -283,6 +282,15 @@ if (!isDev && cluster.isMaster) {
         con.query("INSERT INTO meetingmembers (meetingID, userID, isHost) VALUES (?,?,?)", [meetingId, userId, isHost],function (err, result, fields) {
             if (err) throw err;
             res.end(JSON.stringify(result)); // Result in JSON format
+        });
+    });
+
+    //remove member from meeting
+    router.delete('/deletegroupmember', async (req, res) => {
+        var participantID = req.body.participantID
+        con.query("DELETE FROM meetingMembers WHERE participantID = ?", participantID, function (err, result, fields) {
+            if (err) return console.error(error.message);
+            res.end(JSON.stringify(result));
         });
     });
 
@@ -313,15 +321,6 @@ if (!isDev && cluster.isMaster) {
         });
     })
 
-    //get all comment messages for a given meetingID
-    router.get('/meetingMessage/:meetingID', function (req, res) {
-        var meetingID = req.params.meetingID;
-        con.query("select message from meetingMembers where meetingID = ?", meetingID, function(err, result, fields) {
-            if (err) throw err;
-            res.end(JSON.stringify(result));
-        });
-    });
-
     //*****groups table*****
     //create a new group
     router.post('/postgroupbody', async (req, res) => {
@@ -344,31 +343,59 @@ if (!isDev && cluster.isMaster) {
         });
     });
     //delete a group and remove all group members with matching group id from groupMembers table
-
-    //*****groupMembers table*****
-    //add a new group member
-    router.post('/postmeetingmember', async (req, res) => {
-        var participantID = req.body.participantID
-        var meetingID = req.body.meetingID
-        var userID = req.body.userID
-        var isHost = req.body.isHost
-        var message = req.body.message
-
-        con.query("INSERT INTO meetingMembers (participantID, meetingID, userID, isHost, message) VALUES (?,?,?,?,?)", [participantID, meetingID, userID, isHost, message],function (err, result, fields) {
-            if (err) throw err;
-            res.end(JSON.stringify(result)); // Result in JSON format
-        });
-    });
-    //remove a group member
-    router.delete('/deletemember', async (req, res) => {
-        var participantID = req.body.participantID
-        con.query("DELETE FROM meetingMembers WHERE participantID = ?", participantID, function (err, result, fields) {
+    //**this may not work
+    router.delete('/deletegroup', async (req, res) => {
+        var groupID = req.body.groupID
+        con.query("DELETE FROM groupMembers WHERE groupID = ? UNION DELETE FROM groups where groupID = ?", [groupID, groupID], function (err, result, fields) {
             if (err) return console.error(error.message);
             res.end(JSON.stringify(result));
         });
     });
 
+    //*****groupMembers table*****
+    //add a new group member
+    router.post('/postgroupmember', async (req, res) => {
+        var memberID = req.body.memberID
+        var groupID = req.body.groupID
+        var userID = req.body.userID
+        con.query("INSERT INTO groupMembers (memberID, groupID, userID) VALUES (?,?,?)", [memberID, groupID, userID],function (err, result, fields) {
+            if (err) throw err;
+            res.end(JSON.stringify(result)); // Result in JSON format
+        });
+    });
+
+    //remove a group member
+    router.delete('/deletegroupmember', async (req, res) => {
+        var memberID = req.body.memberID
+        con.query("DELETE FROM groupMembers WHERE memberID = ?", memberID, function (err, result, fields) {
+            if (err) return console.error(error.message);
+            res.end(JSON.stringify(result));
+        });
+    });
+
+    //get all members of a certain group
+    router.get('/groupMembers/:groupID', function (req, res) {
+        var groupID = req.params.groupID;
+        con.query("select * from notifications where groupID = ?", groupID, function(err, result, fields) {
+            if (err) throw err;
+            res.end(JSON.stringify(result));
+        });
+    });
+
     //*****notifications table*****
+    //create a new notification
+    router.post('/postnotif', async (req, res) => {
+        var notificationTime = req.body.notificationTime
+        var notificationType = req.body.notificationType
+        var sender = req.body.sender
+        var recipient = req.body.recipient
+        var meetingID = req.body.meetingID
+        con.query("INSERT INTO notifications (notificationTime, notificationType, sender, recipient, meetingID) VALUES (?,?,?,?,?)", [notificationTime, notificationType, sender, recipient, meetingID], function (err, result, fields) {
+            if (err) throw err;
+            res.end(JSON.stringify(result)); // Result in JSON format
+        });
+    });
+
     //get all notifications in which the recipient has a given userID
     router.get('/notifications/:userID', function (req, res) {
         var uID = req.params.userID;
@@ -378,6 +405,27 @@ if (!isDev && cluster.isMaster) {
         });
     });
 
+    //*****comments table*****
+    //add a new comment
+    router.post('/postcomment', async (req, res) => {
+        var meetingID = req.body.meetingID
+        var authorID = req.body.authorID
+        var timestamp = req.body.timestamp
+        var comment = req.body.comment
+        con.query("INSERT INTO comments (meetingID, authorID, timestamp, comment) VALUES (?,?,?,?)", [meetingID, authorID, timestamp, comment],function (err, result, fields) {
+            if (err) throw err;
+            res.end(JSON.stringify(result)); // Result in JSON format
+        });
+    });
+
+    //get all comments per meetingid
+    router.get('/meetingMessage/:meetingID', function (req, res) {
+        var meetingID = req.params.meetingID;
+        con.query("select * from comments where meetingID = ?", meetingID, function(err, result, fields) {
+            if (err) throw err;
+            res.end(JSON.stringify(result));
+        });
+    });
     // END API CALLS
 
     // All remaining requests return the React app, so it can handle routing.
