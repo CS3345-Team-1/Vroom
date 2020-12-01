@@ -42,17 +42,19 @@ const NewMeetingInterface = (props) => {
 
     // NEW MEETING HANDLER
     const handleAddMeeting = () => {
+        const tzoffset = (new Date()).getTimezoneOffset() * 60000;
+
         console.log(startTimeRef.current.state.inputValue)
         console.log(dateRef.current.state.inputValue)
         // GET FORM FIELD VALUES
         const title = titleRef.current.value
         // const date = dateRef.current.state.inputValue
         const dField = dateRef.current.state.inputValue
-        const date = new Date(dField).toISOString()
+        const date = new Date(new Date(dField) - tzoffset).toISOString().slice(0, -1)
         const sField = startTimeRef.current.state.inputValue
-        const startTime = new Date(dField + ' ' + sField).toISOString()
+        const startTime = new Date(new Date(dField + ' ' + sField) - tzoffset).toISOString().slice(0, -1)
         const eField = endTimeRef.current.state.inputValue
-        const endTime = new Date(dField + ' ' + eField).toISOString()
+        const endTime = new Date(new Date(dField + ' ' + eField) - tzoffset).toISOString().slice(0, -1)
         const isOpen = openRef.current.value
         const maxParticipants = maxRef.current.value
 
@@ -67,6 +69,18 @@ const NewMeetingInterface = (props) => {
                 .then(x => props.updateMeetings())
             // api.addHost(mtg.meetingID, localStorage.getItem(LOCAL_STORAGE_KEY))
             // newMeeting.createOnline(uuidv4(), title, date, startTime, endTime, id, passcode, isOpen, maxParticipants)
+
+            console.log(title)
+            console.log(dField)
+            console.log(date)
+            console.log(sField)
+            console.log(startTime)
+            console.log(eField)
+            console.log(endTime)
+            console.log(isOpen)
+            console.log(maxParticipants)
+            console.log(id)
+            console.log(passcode)
         }
         else {
             const location = locationRef.current.value

@@ -64,8 +64,10 @@ export class Meeting {
             this.participants = JSON.parse(db.participants)
         else
             this.participants = []
-        if (db.comments)
+        if (db.comments) {
             this.notes = JSON.parse(db.comments)
+            this.notes.map(comment => comment.time = new Date(comment.time).toLocaleString())
+        }
         else
             this.notes = []
         return this

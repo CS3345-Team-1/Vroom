@@ -36,8 +36,7 @@ const MeetingNotesInterface = (props) => {
         const id = props.meeting.id
         const author = localStorage.getItem(LOCAL_STORAGE_KEY)
         const note = noteRef.current.value
-        const time = new Date().toISOString()
-
+        const time = new Date(new Date() - (new Date().getTimezoneOffset() * 60000)).toISOString().slice(0, -1)
 
         // DO NOTHING WHEN IF FIELDS ARE BLANK
         if (note === '') return
