@@ -53,7 +53,7 @@ const Home = (props) => {
     return (
         <div id='content'>
             <BS.Card>
-                <NavBar />
+                <NavBar active='home' />
                 <BS.Card.Body>
                     <div id='main-container'>
                         <HomeCalendar

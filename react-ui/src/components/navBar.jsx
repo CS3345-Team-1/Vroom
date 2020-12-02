@@ -9,7 +9,23 @@ import { LOCAL_STORAGE_KEY } from '../config'
 const NavBar = (props) => {
     // const { url } = useParams()
 
+    const [homeActive, setHomeActive] = useState(false)
+    const [groupsActive, setGroupsActive] = useState(false)
+
     const history = useHistory()
+
+    useEffect(() => {
+        switch (props.active) {
+            case 'home':
+                setGroupsActive(false)
+                setHomeActive(true)
+                break
+            case 'groups':
+                setGroupsActive(true)
+                setHomeActive(false)
+                break
+        }
+    }, [])
 
     useEffect(() => {
         const authUser = localStorage.getItem(LOCAL_STORAGE_KEY)
@@ -25,7 +41,7 @@ const NavBar = (props) => {
     return (
         <BS.Navbar as={BS.Card.Header} bg='primary' variant='dark'>
             {/*{ console.log(url) }*/}
-            <BS.Navbar.Brand id='logo' as='BS.Button' variant='outline' size='lg'>
+            <BS.Navbar.Brand id='logo' href='/home' variant='outline' size='lg'>
                 vroom!
             </BS.Navbar.Brand>
             <BS.Nav className={'ml-auto'}>
@@ -38,7 +54,7 @@ const NavBar = (props) => {
                         </BS.Tooltip>
                     }
                 >
-                    <BS.Nav.Link href={'/home'}>
+                    <BS.Nav.Link href={'/home'} active={homeActive}>
                         <Icon.Calendar3 className='header-icon' />
                     </BS.Nav.Link>
 
@@ -52,7 +68,7 @@ const NavBar = (props) => {
                         </BS.Tooltip>
                     }
                 >
-                    <BS.Nav.Link href={'/groups'}>
+                    <BS.Nav.Link href={'/groups'} active={groupsActive}>
                         <Icon.People className='header-icon' />
                     </BS.Nav.Link>
                 </BS.OverlayTrigger>

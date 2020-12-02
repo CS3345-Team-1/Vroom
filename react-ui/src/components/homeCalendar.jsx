@@ -8,9 +8,11 @@ const HomeCalendar = (props) => {
     const allMeetings = props.meetings
     const dateRef = useRef()
 
+    console.log(allMeetings)
+
     const formatDay = (props, thisDate, selectedDate) => {
         const filtered = allMeetings.filter(meeting => {
-            return meeting.date === thisDate.format('M/D/YYYY')
+            return meeting.date === thisDate.format('M/D/YYYY') && meeting.isCancelled === 0
         })
 
         if (validDates(thisDate)) return (

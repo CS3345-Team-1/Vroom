@@ -207,7 +207,7 @@ const Groups = (props) => {
     return (
         <div id='content'>
             <BS.Card>
-                <NavBar />
+                <NavBar active='groups' />
                 <BS.Card.Body>
                     <div id='groups-header'>
                         <h4 id='meeting-list-header'>Contact Groups</h4>
