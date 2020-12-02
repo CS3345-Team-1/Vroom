@@ -15,10 +15,12 @@ const SignOn = (props) => {
 
     const [invalid, setInvalid] = useState(false)
     const [user, setUser] = useState(localStorage.getItem(LOCAL_STORAGE_KEY))
+    const [validated, setValidated] = useState(false);
     const history = useHistory()
 
     const emailRef = useRef()
     const passRef = useRef()
+    const formRef = useRef()
 
     const newEmailRef = useRef()
     const newPasswordRef = useRef()
@@ -58,18 +60,28 @@ const SignOn = (props) => {
 
     }
 
-    const handleSignUp = () => {
-        const userID = uuidv4()
-        const first = newFirstNameRef.current.value
-        const last = newLastNameRef.current.value
-        const email = newEmailRef.current.value
-        const password = newPasswordRef.current.value
+    const handleSignUp = (event) => {
+        const form = event.currentTarget;
+        if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        else {
+            setValidated(true);
+        }
 
+        if(formRef.current.checkValidity() === true) {
+            const userID = uuidv4()
+            const first = newFirstNameRef.current.value
+            const last = newLastNameRef.current.value
+            const email = newEmailRef.current.value
+            const password = newPasswordRef.current.value
 
-        api.register(userID,email,password,first,last).then(x => {
-            setUser(x.insertId)
-            history.push('/home')
-        })
+            api.register(userID, email, password, first, last).then(x => {
+                setUser(x.insertId)
+                history.push('/home')
+            })
+        }
     }
 
     return (
@@ -114,24 +126,24 @@ const SignOn = (props) => {
                         <h4>Sign Up</h4>
                         <BS.Card className='sign-on-form'>
                             <BS.Card.Body>
-                                <BS.Form>
+                                <BS.Form noValidate validated={validated} ref={formRef}>
                                     <BS.Row>
                                         <BS.Col>
                                             <BS.Form.Group controlId="formBasicFirstName">
-                                                <BS.Form.Control type="test" placeholder="First Name" ref={newFirstNameRef} />
+                                                <BS.Form.Control required type="test" placeholder="First Name" ref={newFirstNameRef} />
                                             </BS.Form.Group>
                                         </BS.Col>
                                         <BS.Col>
                                             <BS.Form.Group controlId="formBasicLastName">
-                                                <BS.Form.Control type="test" placeholder="Last Name" ref={newLastNameRef} />
+                                                <BS.Form.Control required type="test" placeholder="Last Name" ref={newLastNameRef} />
                                             </BS.Form.Group>
                                         </BS.Col>
                                     </BS.Row>
                                     <BS.Form.Group controlId="formBasicEmail">
-                                        <BS.Form.Control type="email" placeholder="E-mail" ref={newEmailRef} />
+                                        <BS.Form.Control required type="email" placeholder="E-mail" ref={newEmailRef} />
                                     </BS.Form.Group>
                                     <BS.Form.Group controlId="formBasicPassword">
-                                        <BS.Form.Control type="password" placeholder="Password" ref={newPasswordRef} />
+                                        <BS.Form.Control required type="password" placeholder="Password" ref={newPasswordRef} />
                                     </BS.Form.Group>
                                     <BS.Button variant="success" type='button' onClick={handleSignUp} block>
                                         Register
