@@ -24,6 +24,9 @@ const NavBar = (props) => {
                 setGroupsActive(true)
                 setHomeActive(false)
                 break
+            default:
+                setHomeActive(false)
+                setGroupsActive(false)
         }
     }, [])
 

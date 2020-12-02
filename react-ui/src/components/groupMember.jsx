@@ -5,6 +5,7 @@ import * as Icon from 'react-bootstrap-icons'
 import {CopyToClipboard} from 'react-copy-to-clipboard'
 import CopiedBadge from './copiedBadge'
 import {Api} from '../api/api'
+import {Link} from 'react-router-dom'
 
 
 const GroupMember = (props) => {
@@ -30,7 +31,11 @@ const GroupMember = (props) => {
     return(
         <>
             {/* DISPLAY GROUP MEMBER */}
-            <BS.Badge variant={'dark'} className={'participant-label'} pill>{props.member.first + ' ' + props.member.last}</BS.Badge>
+            <Link to={`/user/${props.member.userId}`}>
+                <BS.Badge variant={'dark'} className={'participant-label'} pill>
+                    {props.member.first + ' ' + props.member.last}
+                </BS.Badge>
+            </Link>
 
 
 

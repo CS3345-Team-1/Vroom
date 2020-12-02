@@ -383,7 +383,7 @@ if (!isDev && cluster.isMaster) {
     // Get all groups for currently logged-in user
     router.get('/groupsFor/:userId', function (req, res) {
         var groupID = req.params.userId;
-        con.query("SELECT groups.*, (SELECT JSON_ARRAYAGG(JSON_OBJECT('email', users.email, 'first', users.firstName, 'last', users.lastName, 'userId', users.userID, 'id', groupmembers.memberID, 'userId', users.userID)) FROM users INNER JOIN groupmembers ON users.userID = groupmembers.userID WHERE groupmembers.groupID = groups.groupID) AS 'members' FROM groups WHERE groups.ownerID = 31 ORDER BY groups.groupName", groupID, function(err, result, fields) {
+        con.query("SELECT groups.*, (SELECT JSON_ARRAYAGG(JSON_OBJECT('email', users.email, 'first', users.firstName, 'last', users.lastName, 'userId', users.userID, 'id', groupmembers.memberID, 'userId', users.userID)) FROM users INNER JOIN groupmembers ON users.userID = groupmembers.userID WHERE groupmembers.groupID = groups.groupID) AS 'members' FROM groups WHERE groups.ownerID = ? ORDER BY groups.groupName", groupID, function(err, result, fields) {
             if (err) throw err;
             res.end(JSON.stringify(result));
         });

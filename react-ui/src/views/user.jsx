@@ -2,6 +2,7 @@ import HomeCalendar from '../components/homeCalendar'
 import MeetingList from '../components/meetingList'
 import * as BS from 'react-bootstrap'
 import React, {useEffect, useState} from 'react'
+import {useParams} from 'react-router-dom'
 import moment from 'moment'
 import NavBar from '../components/navBar'
 import * as Icon from 'react-bootstrap-icons'
@@ -9,13 +10,17 @@ import * as Icon from 'react-bootstrap-icons'
 import { LOCAL_STORAGE_KEY } from '../config'
 import {Api} from '../api/api'
 import {Meeting} from '../models/meeting'
+import UserCalendar from '../components/userCalendar'
+import {useHistory} from 'react-router-dom'
 
 // GLOBAL KEY FOR LOCAL STORAGE
 const LOCAL_STORAGE_KEY_M = 'vroom.meetings'
 
-const Home = (props) => {
+const User = (props) => {
 
     const api = new Api()
+    const params = useParams()
+    const history = useHistory()
 
     const [loaded, setLoaded] = useState(false)
     const [meetings, setMeetings] = useState([])
@@ -31,9 +36,18 @@ const Home = (props) => {
     // EFFECTS FOR LOCALSTORAGE READING, WRITING
     useEffect(() => {
         // api.getUserMeetings(localStorage.getItem(LOCAL_STORAGE_KEY)).then((x) => setReadMeetings(x))
-        api.getUserMeetingsDetailed(localStorage.getItem(LOCAL_STORAGE_KEY)).then((x) => setReadMeetings(x))
-        api.getUser(localStorage.getItem(LOCAL_STORAGE_KEY)).then(x => setCurrentUser(x))
+        api.getUserMeetingsDetailed(params.userId).then((x) => setReadMeetings(x))
+        api.getUser(params.userId).then(x => setCurrentUser(x))
+        if (params.userId === localStorage.getItem(LOCAL_STORAGE_KEY))
+            history.push('/')
     }, [])
+
+    useEffect(() => {
+        api.getUserMeetingsDetailed(params.userId).then((x) => setReadMeetings(x))
+        api.getUser(params.userId).then(x => setCurrentUser(x))
+        if (params.userId === localStorage.getItem(LOCAL_STORAGE_KEY))
+            history.push('/')
+    }, [params])
 
     useEffect(() => {
         let parseMeetings = []
@@ -50,22 +64,25 @@ const Home = (props) => {
 
     const updateMeetings = () => {
         // api.getUserMeetings(localStorage.getItem(LOCAL_STORAGE_KEY)).then((x) => setReadMeetings(x))
-        api.getUserMeetingsDetailed(localStorage.getItem(LOCAL_STORAGE_KEY)).then((x) => setReadMeetings(x))
+        api.getUserMeetingsDetailed(params.userId).then((x) => setReadMeetings(x))
     }
 
     return (
         <div id='content'>
             <BS.Card>
-                <NavBar active='home' />
+                <NavBar />
                 <BS.Card.Body>
                     <div id='main-container'>
                         <div>
                             <BS.Toast>
                                 <BS.ToastHeader closeButton={false}>
-                                    <Icon.PersonCircle/>&nbsp;&nbsp;Welcome, {currentUser ? currentUser[0].firstName : 'User'}!
+                                    <Icon.PersonCircle/><strong>&nbsp;&nbsp;Schedule for {currentUser ? currentUser[0].firstName : ''}</strong>
                                 </BS.ToastHeader>
+                                <BS.ToastBody>
+                                    <small><Icon.Envelope />&nbsp;&nbsp;{currentUser ? currentUser[0].email : ''}</small>
+                                </BS.ToastBody>
                             </BS.Toast>
-                            <HomeCalendar
+                            <UserCalendar
                                 meetings={meetings}
                                 setMeetings={(i) => setMeetings(i)}
                                 // setReadMeetings={(i) => setReadMeetings(i)}
@@ -91,4 +108,4 @@ const Home = (props) => {
     )
 }
 
-export default Home
+export default User

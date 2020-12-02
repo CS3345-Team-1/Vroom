@@ -147,6 +147,146 @@ const Meeting = (props) => {
         )
     }
 
+    const joinMeeting = () => {
+        api.addMember(props.meeting.id, localStorage.getItem(LOCAL_STORAGE_KEY)).then(props.updateMeetings)
+    }
+
+
+    if (!props.meeting.participants.find(x => x.userId.toString() === localStorage.getItem(LOCAL_STORAGE_KEY)))
+        return (
+            <>
+                {/* BEGIN MEETING DISPLAY AS BOOTSTRAP ACCORDION */}
+                <BS.Accordion as={BS.Toast} className='meeting-toast'>
+                    {/* MEETING HEADER WITH CONTEXT BUTTONS */}
+                    <BS.Toast.Header closeButton={false}>
+                        <small>
+                            {
+                                props.meeting.isOpen ?
+                                    <BS.Button
+                                        variant={'link'}
+                                        className={'shadow-none'}
+                                    >
+                                        <BS.OverlayTrigger
+                                            trigger='hover'
+                                            placement='left'
+                                            overlay={
+                                                <BS.Tooltip id={`tooltip-left`}>
+                                                    Public Meeting
+                                                </BS.Tooltip>
+                                            }
+                                        >
+                                            <Icon.UnlockFill />
+
+                                        </BS.OverlayTrigger>
+                                    </BS.Button>
+                                :
+                                    <BS.Button
+                                        variant={'link'}
+                                        className={'shadow-none'}
+                                    >
+                                        <BS.OverlayTrigger
+                                            trigger='hover'
+                                            placement='left'
+                                            overlay={
+                                                <BS.Tooltip id={`tooltip-left`}>
+                                                    Private Meeting
+                                                </BS.Tooltip>
+                                            }
+                                        >
+                                            <Icon.LockFill />
+
+                                        </BS.OverlayTrigger>
+                                    </BS.Button>
+                            }
+                        </small>
+                        <span className={'mr-auto'}>
+                            <strong>&nbsp;{props.meeting.title}</strong> at {props.meeting.startTime} until {props.meeting.endTime}
+                        </span>
+
+                        {
+                            props.meeting.isOpen ?
+                                (
+                                    props.meeting.isFull ?
+                                        <BS.Badge variant='light' pill disabled>
+                                            Meeting Full
+                                        </BS.Badge>
+                                    :
+                                        <BS.Button as={BS.Badge} variant='outline-success' onClick={joinMeeting} pill>
+                                            Join
+                                        </BS.Button>
+                                )
+                            :
+                                console.log(props.meeting)
+                        }
+
+                        {/*    /!* ZOOM LINK *!/*/}
+                        {/*    <BS.OverlayTrigger*/}
+                        {/*        trigger='hover'*/}
+                        {/*        placement='top'*/}
+                        {/*        overlay={*/}
+                        {/*            <BS.Tooltip id={`tooltip-top`}>*/}
+                        {/*                Open in Zoom*/}
+                        {/*            </BS.Tooltip>*/}
+                        {/*        }*/}
+                        {/*    >*/}
+                        {/*        <BS.Button*/}
+                        {/*            variant={'link'}*/}
+                        {/*            className={'shadow-none'}*/}
+                        {/*            href={'https://zoom.us/j/' + props.meeting.meetingID.replace(/\s/g,'')}*/}
+                        {/*            target={'_blank'}*/}
+                        {/*            rel={'noopener noreferrer'}*/}
+                        {/*        >*/}
+                        {/*            <Icon.Link45deg />*/}
+                        {/*        </BS.Button>*/}
+                        {/*    </BS.OverlayTrigger>*/}
+                        {/*    <ExportToCalendar />*/}
+                        {/*    <MeetingNotesInterface*/}
+                        {/*        updateMeetings={props.updateMeetings}*/}
+                        {/*        meeting={props.meeting}*/}
+                        {/*        setNotes={(i) => setNotes(i)}*/}
+                        {/*        setMeetings={(i) => props.setMeetings(i)}*/}
+                        {/*        notes={notes}*/}
+                        {/*    />*/}
+
+                    </BS.Toast.Header>
+
+                    {/* BEGIN MEETING BODY */}
+                    {/*<BS.Accordion.Collapse eventKey={props.meeting.id}>*/}
+                    {/*    <BS.Toast.Body style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>*/}
+                    {/*        <div>*/}
+                    {/*            <div className='meeting-card-line'>*/}
+                    {/*                <span className='meeting-text'>Zoom Meeting ID: </span>*/}
+                    {/*                <MeetingIDInterface updateMeetings={props.updateMeetings} meeting={props.meeting} setMeetings={(i) => props.setMeetings(i)} />*/}
+                    {/*            </div>*/}
+                    {/*            <div className='meeting-card-line'>*/}
+                    {/*                <span className='meeting-text'>Meeting Passcode: </span>*/}
+                    {/*                <EditPasscodeInterface updateMeetings={props.updateMeetings} meeting={props.meeting} setMeetings={(i) => props.setMeetings(i)} />*/}
+                    {/*            </div>*/}
+                    {/*            <div className='meeting-card-line'>*/}
+                    {/*                <span className='meeting-text'>Participants: </span>*/}
+                    {/*                {props.meeting.participants.map(participant => {*/}
+                    {/*                    return <Participant updateMeetings={props.updateMeetings} participant={participant} meeting={props.meeting} setMeetings={(i) => props.setMeetings(i)} />*/}
+                    {/*                })}*/}
+                    {/*                <ParticipantInterface updateMeetings={props.updateMeetings} meeting={props.meeting} setParticipants={(i) => setParticipants(i)} setMeetings={(i) => props.setMeetings(i)}/>*/}
+                    {/*            </div>*/}
+                    {/*        </div>*/}
+                    {/*        {*/}
+                    {/*            props.meeting.participants.find(x => x.userId.toString() === localStorage.getItem(LOCAL_STORAGE_KEY)) ?*/}
+                    {/*                (*/}
+                    {/*                    props.meeting.participants.find(x => x.userId.toString() === localStorage.getItem(LOCAL_STORAGE_KEY)).isHost ?*/}
+                    {/*                        <CancelButton />*/}
+                    {/*                        :*/}
+                    {/*                        <LeaveButton />*/}
+                    {/*                )*/}
+                    {/*                :*/}
+                    {/*                <BS.Button variant={'success'} size={'sm'}>Join!</BS.Button>*/}
+                    {/*        }*/}
+                    {/*    </BS.Toast.Body>*/}
+                    {/*</BS.Accordion.Collapse>*/}
+                </BS.Accordion>
+            </>
+        )
+
     return(
         <>
             {/* BEGIN MEETING DISPLAY AS BOOTSTRAP ACCORDION */}
@@ -210,9 +350,15 @@ const Meeting = (props) => {
                                 </div>
                             </div>
                             {
-                                props.meeting.participants.find(x => x.userId.toString() === localStorage.getItem(LOCAL_STORAGE_KEY)).isHost ?
-                                    <CancelButton />
-                                    : <LeaveButton />
+                                props.meeting.participants.find(x => x.userId.toString() === localStorage.getItem(LOCAL_STORAGE_KEY)) ?
+                                    (
+                                        props.meeting.participants.find(x => x.userId.toString() === localStorage.getItem(LOCAL_STORAGE_KEY)).isHost ?
+                                            <CancelButton />
+                                        :
+                                            <LeaveButton />
+                                    )
+                                :
+                                    <BS.Button variant={'success'} size={'sm'}>Join!</BS.Button>
                             }
                         </BS.Toast.Body>
                     </BS.Accordion.Collapse>

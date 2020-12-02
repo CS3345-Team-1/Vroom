@@ -52,8 +52,8 @@ export class Meeting {
     parseDetail = (db) => {
         this.isOnline = db.isOnline
         this.date = DEPLOYED ? new Date(db.date.slice(0,-1)).toLocaleDateString() :new Date(db.date).toLocaleDateString()
-        this.startTime = DEPLOYED ? new Date(db.startTime.slice(0,-1)).toLocaleTimeString() : new Date(db.startTime).toLocaleTimeString()
-        this.endTime = DEPLOYED ? new Date(db.endTime.slice(0,-1)).toLocaleTimeString() : new Date(db.endTime).toLocaleTimeString()
+        this.startTime = DEPLOYED ? new Date(db.startTime.slice(0,-1)).toLocaleTimeString("en-US",{hour: 'numeric', minute: 'numeric'}) : new Date(db.startTime).toLocaleTimeString("en-US",{hour: 'numeric', minute: 'numeric'})
+        this.endTime = DEPLOYED ? new Date(db.endTime.slice(0,-1)).toLocaleTimeString("en-US",{hour: 'numeric', minute: 'numeric'}) : new Date(db.endTime).toLocaleTimeString("en-US",{hour: 'numeric', minute: 'numeric'})
         this.id = db.meetingID
         this.title = db.meetingName
         this.isOpen = db.isOpen
@@ -67,10 +67,16 @@ export class Meeting {
             this.participants = []
         if (db.comments) {
             this.notes = JSON.parse(db.comments)
-            this.notes.map(comment => comment.time = new Date(comment.time).toLocaleString())
+            this.notes.map(comment => comment.time = new Date(comment.time).toLocaleString("en-US",{weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'}))
         }
         else
             this.notes = []
+        if (this.maxParticipants === 0)
+            this.isFull = false
+        else if (this.participants.length <= this.maxParticipants)
+            this.isFull = false
+        else
+            this.isFull = true
         return this
     }
 

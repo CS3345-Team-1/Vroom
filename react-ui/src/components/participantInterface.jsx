@@ -111,7 +111,7 @@ const ParticipantInterface = (props) => {
         <>
             {/* DISPLAYED TOGGLE ELEMENT WITH TOOLTIP */}
             {
-                props.meeting.participants.find(x => x.userId.toString() === localStorage.getItem(LOCAL_STORAGE_KEY)).isHost ?
+                props.meeting.participants.find(x => x.userId.toString() === localStorage.getItem(LOCAL_STORAGE_KEY)) && props.meeting.participants.find(x => x.userId.toString() === localStorage.getItem(LOCAL_STORAGE_KEY)).isHost ?
                     <BS.OverlayTrigger
                         trigger='hover'
                         placement='right'
