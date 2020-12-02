@@ -320,25 +320,33 @@ const Meeting = (props) => {
                                         null
                             }
                             {/* ZOOM LINK */}
-                            <BS.OverlayTrigger
-                                trigger='hover'
-                                placement='top'
-                                overlay={
-                                    <BS.Tooltip id={`tooltip-top`}>
-                                        Open in Zoom
-                                    </BS.Tooltip>
-                                }
-                            >
-                                <BS.Button
-                                    variant={'link'}
-                                    className={'shadow-none'}
-                                    href={'https://zoom.us/j/' + props.meeting.meetingID.replace(/\s/g,'')}
-                                    target={'_blank'}
-                                    rel={'noopener noreferrer'}
-                                >
-                                    <Icon.Link45deg />
-                                </BS.Button>
-                            </BS.OverlayTrigger>
+
+
+                            {
+                                props.meeting.isOnline ?
+                                    <BS.OverlayTrigger
+                                        trigger='hover'
+                                        placement='top'
+                                        overlay={
+                                            <BS.Tooltip id={`tooltip-top`}>
+                                                Open in Zoom
+                                            </BS.Tooltip>
+                                        }
+                                    >
+                                        <BS.Button
+                                            variant={'link'}
+                                            className={'shadow-none'}
+                                            href={'https://zoom.us/j/' + props.meeting.meetingID.replace(/\s/g,'')}
+                                            target={'_blank'}
+                                            rel={'noopener noreferrer'}
+                                        >
+                                            <Icon.Link45deg />
+                                        </BS.Button>
+                                    </BS.OverlayTrigger>
+                                    :
+                                        null
+                            }
+
                             <ExportToCalendar />
                             <MeetingNotesInterface
                                 updateMeetings={props.updateMeetings}
