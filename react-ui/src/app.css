@@ -166,3 +166,10 @@
     flex-direction: column;
     align-items: center;
 }
+
+#participants-dropdown {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

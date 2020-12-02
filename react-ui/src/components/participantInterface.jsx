@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 
 import * as BS from 'react-bootstrap'
 import * as Icon from 'react-bootstrap-icons'
@@ -12,6 +12,17 @@ const ParticipantInterface = (props) => {
     const [modalShow, setModalShow] = React.useState(false)
     const [invalid, setInvalid] = useState(false)
     const [exists, setExists] = useState(false)
+    const [groups, setGroups] = useState()
+    const [loaded, setLoaded] = useState(false)
+
+    useEffect(() => {
+        api.getGroups(localStorage.getItem(LOCAL_STORAGE_KEY)).then(x => x ? setGroups(x) : setGroups([]))
+    }, [])
+
+    useEffect(() => {
+        if (groups)
+            setLoaded(true)
+    }, [groups])
 
     const api = new Api()
 
@@ -73,6 +84,29 @@ const ParticipantInterface = (props) => {
         // handleClose()
     }
 
+    const GroupDropDownItem = (props) => {
+
+        const handleAddGroup = () => {
+            const members = JSON.parse(props.group.members)
+            members.map(
+                x => props.meeting.participants.find(y => y.userId === x.userId) ?
+                    null
+                :
+                    api.addMember(props.meeting.id, x.userId)
+                        .then(e => props.updateMeetings())
+            )
+            handleClose()
+        }
+
+        if (!props.group.members) return <></>
+
+        return(
+            <BS.Dropdown.Item onClick={handleAddGroup}>{props.group.groupName}</BS.Dropdown.Item>
+        )
+    }
+
+    if (!loaded) return <></>
+
     return (
         <>
             {/* DISPLAYED TOGGLE ELEMENT WITH TOOLTIP */}
@@ -114,20 +148,20 @@ const ParticipantInterface = (props) => {
                         <BS.Tab eventKey="add-single" title="Single Participant">
                             {
                                 invalid ?
-                                    <BS.Alert variant='danger'>
+                                    <BS.Alert variant='danger' className={'mt-4'}>
                                         No user found.
                                     </BS.Alert>
                                 : null
                             }
                             {
                                 exists ?
-                                    <BS.Alert variant='danger'>
+                                    <BS.Alert variant='danger' className={'mt-4'}>
                                         User is already a participant.
                                     </BS.Alert>
                                     : null
                             }
 
-                            <BS.Form>
+                            <BS.Form className={'mt-4'}>
                                 <BS.Form.Group controlId='text'>
                                     <BS.Form.Control
                                         ref={nameRef}
@@ -139,7 +173,29 @@ const ParticipantInterface = (props) => {
                             </BS.Form>
                         </BS.Tab>
                         <BS.Tab eventKey="add-group" title="Add a Group">
-                            ADD A GROUP
+                            <div id='participants-dropdown'>
+
+                                {
+                                    groups.filter(x => x.members).length > 0 ?
+                                        <BS.DropdownButton variant='success' id='groups-dropdown' title='My Groups' className={'mt-4 mr-auto ml-auto'}>
+                                            {
+                                                groups.map(group => <GroupDropDownItem group={group} meeting={props.meeting} updateMeetings={props.updateMeetings} />)
+                                            }
+                                        </BS.DropdownButton>
+                                    :
+                                        <p className='mt-5'>You haven't created any groups yet.</p>
+                                }
+
+                                {/*<BS.DropdownButton variant='success' id='groups-dropdown' title='My Groups' className={'mt-4 mr-auto ml-auto'}>*/}
+                                {/*    {*/}
+                                {/*        groups.length > 0 ?*/}
+                                {/*            groups.map(group => <GroupDropDownItem group={group} meeting={props.meeting} updateMeetings={props.updateMeetings} />)*/}
+                                {/*        :*/}
+                                {/*            <BS.Dropdown.Item>No Groups</BS.Dropdown.Item>*/}
+                                {/*    }*/}
+                                {/*</BS.DropdownButton>*/}
+                                <small className='mt-3 mb-2'>You can manage your groups <a href={'/groups'}>here</a>.</small>
+                            </div>
                         </BS.Tab>
 
                     </BS.Tabs>
