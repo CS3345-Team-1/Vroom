@@ -69,7 +69,7 @@ const NewGroupInterface = (props) => {
 
                 <BS.Modal.Body>
                     {/* NEW MEETING ID FORM FIELD */}
-                    <BS.Form>
+                    <BS.Form onSubmit={handleAdd}>
                         <BS.Form.Group controlId='text'>
                             <BS.Form.Control
                                 ref={nameRef}

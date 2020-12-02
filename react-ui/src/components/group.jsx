@@ -36,9 +36,7 @@ const Group = (props) => {
 
     return(
         <>
-            {/* BEGIN GROUP DISPLAY AS BOOTSTRAP ACCORDION */}
             <BS.Accordion as={BS.Toast} className='meeting-toast'>
-                {/* MEETING HEADER WITH CONTEXT BUTTONS */}
                 <BS.Toast.Header closeButton={false}>
                     <span className={'mr-auto'}>
                         <Toggle eventKey={props.group.id} />
@@ -46,9 +44,8 @@ const Group = (props) => {
                     <BS.Badge variant={'secondary'} className={'ml-auto'}>{props.group.members.length} Group Members</BS.Badge>
                 </BS.Toast.Header>
 
-                {/* BEGIN MEETING BODY */}
                 <BS.Accordion.Collapse eventKey={props.group.id}>
-                    <BS.Toast.Body style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
+                    <BS.Toast.Body style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', margin: '0 1rem'}}>
                         <div className='meeting-card-line'>
                             <span className='meeting-text'>Participants: </span>
                             {props.group.members.map(member => {

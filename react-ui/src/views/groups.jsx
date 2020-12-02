@@ -65,7 +65,7 @@ const Groups = (props) => {
 
     const GroupList = (props) => {
         return (
-            <BS.Col sm={4}>
+            <BS.Col sm={4} className={'groups-list'}>
                 <NewGroupInterface updateGroups={updateGroups} setGroups={(i) => setGroups(i)} tabRef={tabRef} />
                 <BS.ListGroup as={BS.Toast} variant={'flush'} className={'group-tabs mb-3'}>
                     {groups.map((group) =>
@@ -193,7 +193,7 @@ const Groups = (props) => {
             <>
                 {
                     groups.map((group) =>
-                        <BS.Tab.Pane eventKey={'#' + group.id}>
+                        <BS.Tab.Pane eventKey={'#' + group.id}  className={'ml-3 mr-3'}>
                             <GroupDetail group={group} />
                         </BS.Tab.Pane>
                     )
@@ -217,7 +217,7 @@ const Groups = (props) => {
                         <BS.Row>
                             <GroupList />
                             <BS.Tab.Content className={'group-content'}>
-                                <BS.Tab.Pane eventKey={'#1'}>
+                                <BS.Tab.Pane eventKey={'#1'} className={'ml-3 mr-3'}>
                                     <BS.Toast className={'meeting-toast'}>
                                         <BS.Toast.Body>
                                             Select a group to see its members, or click <strong>New Group</strong>.

@@ -74,7 +74,7 @@ const User = (props) => {
                 <BS.Card.Body>
                     <div id='main-container'>
                         <div>
-                            <BS.Toast>
+                            <BS.Toast className={'meeting-toast'}>
                                 <BS.ToastHeader closeButton={false}>
                                     <Icon.PersonCircle/><strong>&nbsp;&nbsp;Schedule for {currentUser ? currentUser[0].firstName : ''}</strong>
                                 </BS.ToastHeader>

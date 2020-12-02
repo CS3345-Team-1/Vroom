@@ -14,6 +14,7 @@ const ParticipantInterface = (props) => {
     const [exists, setExists] = useState(false)
     const [groups, setGroups] = useState()
     const [loaded, setLoaded] = useState(false)
+    const [disabled, setDisabled] = useState(false)
 
     useEffect(() => {
         api.getGroups(localStorage.getItem(LOCAL_STORAGE_KEY)).then(x => x ? setGroups(x) : setGroups([]))
@@ -30,7 +31,11 @@ const ParticipantInterface = (props) => {
     const nameRef = useRef()
 
     // MODAL HANDLERS
-    const handleClose = () => setModalShow(false)
+    const handleClose = () => {
+        setModalShow(false)
+        setExists(false)
+        setInvalid(false)
+    }
     const handleShow = () => setModalShow(true)
 
     // ADD PARTICIPANT HANDLER
@@ -144,8 +149,9 @@ const ParticipantInterface = (props) => {
 
                 <BS.Modal.Body>
                     {/* NEW PARTICIPANT FIELD */}
-                    <BS.Tabs defaultActiveKey="add-single" id="add-participant-tabs">
+                    <BS.Tabs defaultActiveKey="add-single" id="add-participant-tabs" onSelect={() => setDisabled(!disabled)}>
                         <BS.Tab eventKey="add-single" title="Single Participant">
+                            <BS.TabPane>
                             {
                                 invalid ?
                                     <BS.Alert variant='danger' className={'mt-4'}>
@@ -161,8 +167,8 @@ const ParticipantInterface = (props) => {
                                     : null
                             }
 
-                            <BS.Form className={'mt-4'}>
-                                <BS.Form.Group controlId='text'>
+                            {/*<BS.Form className={'mt-4'}>*/}
+                                <BS.Form.Group controlId='text' className={'mt-4'}>
                                     <BS.Form.Control
                                         ref={nameRef}
                                         type='text'
@@ -170,9 +176,11 @@ const ParticipantInterface = (props) => {
                                         autocomplete='off'
                                     />
                                 </BS.Form.Group>
-                            </BS.Form>
+                            {/*</BS.Form>*/}
+                            </BS.TabPane>
                         </BS.Tab>
                         <BS.Tab eventKey="add-group" title="Add a Group">
+                            <BS.TabPane>
                             <div id='participants-dropdown'>
 
                                 {
@@ -196,6 +204,7 @@ const ParticipantInterface = (props) => {
                                 {/*</BS.DropdownButton>*/}
                                 <small className='mt-3 mb-2'>You can manage your groups <a href={'/groups'}>here</a>.</small>
                             </div>
+                            </BS.TabPane>
                         </BS.Tab>
 
                     </BS.Tabs>
@@ -203,7 +212,7 @@ const ParticipantInterface = (props) => {
 
                 {/* ACTION BUTTONS */}
                 <BS.Modal.Footer>
-                    <BS.Button variant='primary' onClick={handleAddParticipant}>Add Participant</BS.Button>
+                    <BS.Button variant='primary' onClick={handleAddParticipant} disabled={disabled}>Add Participant</BS.Button>
                     <BS.Button variant='danger' onClick={handleClose}>Cancel</BS.Button>
                 </BS.Modal.Footer>
             </BS.Modal>

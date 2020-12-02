@@ -11,6 +11,7 @@ import MeetingIDInterface from './meetingIDInterface'
 import EditPasscodeInterface from './passcodeInterface'
 import {LOCAL_STORAGE_KEY} from '../config'
 import {Api} from '../api/api'
+import MeetingLocationInterface from './meetingLocationInterface'
 
 
 const Meeting = (props) => {
@@ -142,7 +143,7 @@ const Meeting = (props) => {
 
         return(
             <BS.OverlayTrigger trigger='focus' placement='left' overlay={popover}>
-                <BS.Button ref={target} variant='danger' size='sm'>Leave Meeting</BS.Button>
+                <BS.Button ref={target} variant='warning' size='sm'>Leave Meeting</BS.Button>
             </BS.OverlayTrigger>
         )
     }
@@ -297,6 +298,27 @@ const Meeting = (props) => {
                             <Toggle eventKey={props.meeting.id}/>
                         </span>
                         <small>
+                            {
+                                props.meeting.participants.find(x => x.userId.toString() === localStorage.getItem(LOCAL_STORAGE_KEY)).isHost ?
+                                        <BS.OverlayTrigger
+                                            trigger='hover'
+                                            placement='top'
+                                            overlay={
+                                                <BS.Tooltip id={`tooltip-top`}>
+                                                    You're the host
+                                                </BS.Tooltip>
+                                            }
+                                        >
+                                            <BS.Button
+                                                variant={'link'}
+                                                className={'shadow-none'}
+                                            >
+                                                <Icon.Star />
+                                            </BS.Button>
+                                        </BS.OverlayTrigger>
+                                    :
+                                        null
+                            }
                             {/* ZOOM LINK */}
                             <BS.OverlayTrigger
                                 trigger='hover'
@@ -333,14 +355,34 @@ const Meeting = (props) => {
                     <BS.Accordion.Collapse eventKey={props.meeting.id}>
                         <BS.Toast.Body style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
                             <div>
-                                <div className='meeting-card-line'>
-                                    <span className='meeting-text'>Zoom Meeting ID: </span>
-                                    <MeetingIDInterface updateMeetings={props.updateMeetings} meeting={props.meeting} setMeetings={(i) => props.setMeetings(i)} />
-                                </div>
-                                <div className='meeting-card-line'>
-                                    <span className='meeting-text'>Meeting Passcode: </span>
-                                    <EditPasscodeInterface updateMeetings={props.updateMeetings} meeting={props.meeting} setMeetings={(i) => props.setMeetings(i)} />
-                                </div>
+
+                                {
+                                    props.meeting.isOnline ?
+                                        <div className='meeting-card-line'>
+                                            <span className='meeting-text'>Zoom Meeting ID: </span>
+                                            <MeetingIDInterface updateMeetings={props.updateMeetings} meeting={props.meeting} setMeetings={(i) => props.setMeetings(i)} />
+                                        </div>
+                                    :
+                                        <>
+                                            <div className='meeting-card-line mb-2'>
+                                                <BS.Form.Text className={'text-muted'}><Icon.InfoCircle />&nbsp;This meeting is being held in person.</BS.Form.Text>
+                                            </div>
+                                            <div className='meeting-card-line'>
+                                                <span className='meeting-text'>Meeting Location: </span>
+                                                <MeetingLocationInterface updateMeetings={props.updateMeetings} meeting={props.meeting} setMeetings={(i) => props.setMeetings(i)} />
+                                            </div>
+                                        </>
+                                }
+                                {
+                                    props.meeting.isOnline ?
+                                        <div className='meeting-card-line'>
+                                            <span className='meeting-text'>Meeting Passcode: </span>
+                                            <EditPasscodeInterface updateMeetings={props.updateMeetings} meeting={props.meeting} setMeetings={(i) => props.setMeetings(i)} />
+                                        </div>
+                                        :
+                                        null
+                                }
+
                                 <div className='meeting-card-line'>
                                     <span className='meeting-text'>Participants: </span>
                                     {props.meeting.participants.map(participant => {

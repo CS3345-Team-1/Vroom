@@ -99,9 +99,9 @@
 }
 
 .groups-list-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
+    /*display: flex;*/
+    /*justify-content: space-between;*/
+    /*align-items: flex-start;*/
 }
 
 .form-buttons {
@@ -131,8 +131,17 @@
 }
 
 .group-tabs {
-    width: 100%;
-    justify-self: center;
+    /*width: 100%;*/
+    /*justify-self: center;*/
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.groups-list {
+    /*background-color: lime;*/
+    /*display: flex;*/
+    /*flex-direction: column;*/
+    /*align-items: center;*/
 }
 
 #sign-on {
@@ -173,3 +182,4 @@
     flex-direction: column;
     align-items: center;
 }
+

@@ -43,7 +43,7 @@ const UserCalendar = (props) => {
     }
 
     return (
-        <BS.Toast id='calendar-toast'>
+        <BS.Toast id='calendar-toast' className={'mb-3'}>
             <BS.ToastBody id='calendar-toast-body'>
                 <Datetime ref={dateRef}
                           input={false}

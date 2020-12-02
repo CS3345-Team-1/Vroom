@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 
 import * as BS from 'react-bootstrap'
 import {CopyToClipboard} from 'react-copy-to-clipboard'
@@ -14,13 +14,39 @@ const PasscodeInterface = (props) => {
     // STATE LISTENER
     const [modalShow, setModalShow] = React.useState(false)
     const [copyAlert, setCopyAlert] = React.useState(false)
+    const [defaultValue, setDefaultValue] = useState()
+    const [loaded, setLoaded] = useState(false)
+
+    useEffect(() => {
+        if (props.meeting.passcode === 'None')
+            setDefaultValue('')
+        else
+            setDefaultValue(props.meeting.passcode)
+    }, [])
+
+    useEffect(() => {
+        if(defaultValue !== '')
+            setLoaded(true)
+    }, [defaultValue])
 
     // FORM TRACKING REF
     const passcodeRef = useRef()
 
     // MODAL HANDLERS
-    const handleClose = () => setModalShow(false)
-    const handleShow = () => setModalShow(true)
+    const handleClose = () => {
+        setModalShow(false)
+        if (props.meeting.passcode === 'None')
+            setDefaultValue('')
+        else
+            setDefaultValue(props.meeting.passcode)
+    }
+    const handleShow = () => {
+        if (props.meeting.passcode === 'None')
+            setDefaultValue('')
+        else
+            setDefaultValue(props.meeting.passcode)
+        setModalShow(true)
+    }
 
     // NEW MEETING HANDLER
     const handleChangeID = (e) => {
@@ -29,6 +55,7 @@ const PasscodeInterface = (props) => {
 
         // IF FIELD IS EMPTY, DO NOTHING
         if (newPasscode === '') {
+            api.changePasscode(props.meeting.id, 'None').then((x) => props.updateMeetings())
             handleClose()
             return
         }
@@ -43,25 +70,50 @@ const PasscodeInterface = (props) => {
         handleClose()
     }
 
+    if (!loaded) return <></>
+
     return (
         <>
             {/* MEETING PASSCODE DISPLAY BUTTON WITH TOOLTIP */}
-            <BS.OverlayTrigger
-                trigger='hover'
-                placement='top'
-                overlay={
-                    <BS.Tooltip id={`tooltip-top`}>
-                        Click to Copy
-                    </BS.Tooltip>
-                }
-            >
-                {/* COPIES ID TO CLIPBOARD ON CLICK */}
-                <CopyToClipboard text={props.meeting.passcode} onCopy={() => setCopyAlert(!copyAlert)}>
-                    <BS.Button as={BS.Badge} size='lg' pill variant='outline-danger'>
+            {
+                props.meeting.passcode === 'None' ?
+                    <BS.Button as={BS.Badge} pill variant='outline-warning'>
                         {props.meeting.passcode}
                     </BS.Button>
-                </CopyToClipboard>
-            </BS.OverlayTrigger>
+                :
+                    <BS.OverlayTrigger
+                        trigger='hover'
+                        placement='top'
+                        overlay={
+                            <BS.Tooltip id={`tooltip-top`}>
+                                Click to Copy
+                            </BS.Tooltip>
+                        }
+                    >
+                        {/* COPIES ID TO CLIPBOARD ON CLICK */}
+                        <CopyToClipboard text={props.meeting.passcode} onCopy={() => setCopyAlert(!copyAlert)}>
+                            <BS.Button as={BS.Badge} size='lg' pill variant='outline-danger'>
+                                {props.meeting.passcode}
+                            </BS.Button>
+                        </CopyToClipboard>
+                    </BS.OverlayTrigger>
+            }
+            {/*<BS.OverlayTrigger*/}
+            {/*    trigger='hover'*/}
+            {/*    placement='top'*/}
+            {/*    overlay={*/}
+            {/*        <BS.Tooltip id={`tooltip-top`}>*/}
+            {/*            Click to Copy*/}
+            {/*        </BS.Tooltip>*/}
+            {/*    }*/}
+            {/*>*/}
+            {/*    /!* COPIES ID TO CLIPBOARD ON CLICK *!/*/}
+            {/*    <CopyToClipboard text={props.meeting.passcode} onCopy={() => setCopyAlert(!copyAlert)}>*/}
+            {/*        <BS.Button as={BS.Badge} size='lg' pill variant='outline-danger'>*/}
+            {/*            {props.meeting.passcode}*/}
+            {/*        </BS.Button>*/}
+            {/*    </CopyToClipboard>*/}
+            {/*</BS.OverlayTrigger>*/}
 
             {/* EDIT BUTTON, LAUNCHES MODAL */}
             {
@@ -113,16 +165,18 @@ const PasscodeInterface = (props) => {
 
                 <BS.Modal.Body>
                     {/* NEW PASSCODE FORM FIELD */}
-                    <BS.Form>
+                    {/*<BS.Form>*/}
                         <BS.Form.Group controlId='text'>
                             <BS.Form.Control
                                 ref={passcodeRef}
                                 type='text'
-                                defaultValue={props.meeting.passcode}
+                                defaultValue={defaultValue}
                                 autocomplete='off'
+                                placeholder={'None'}
                             />
+                            <BS.Form.Text className={'text-muted'}>Leave blank for no password.</BS.Form.Text>
                         </BS.Form.Group>
-                    </BS.Form>
+                    {/*</BS.Form>*/}
                 </BS.Modal.Body>
 
                 {/* ACTION BUTTONS */}

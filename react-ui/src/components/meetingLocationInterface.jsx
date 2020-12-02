@@ -8,7 +8,7 @@ import {Api} from '../api/api'
 import {LOCAL_STORAGE_KEY} from '../config'
 
 
-const MeetingIDInterface = (props) => {
+const MeetingLocationInterface = (props) => {
     const api = new Api()
 
     // STATE LISTENER
@@ -78,7 +78,7 @@ const MeetingIDInterface = (props) => {
                             <Icon.PencilFill />
                         </BS.Button>
                     </BS.OverlayTrigger>
-                : null
+                    : null
             }
             {/*<BS.OverlayTrigger*/}
             {/*    trigger='hover'*/}
@@ -106,7 +106,7 @@ const MeetingIDInterface = (props) => {
             >
                 <BS.Modal.Header>
                     <BS.Modal.Title id='contained-modal-title'>
-                        Edit Meeting ID
+                        Edit Meeting Location
                     </BS.Modal.Title>
                 </BS.Modal.Header>
 
@@ -134,4 +134,4 @@ const MeetingIDInterface = (props) => {
     )
 }
 
-export default MeetingIDInterface
+export default MeetingLocationInterface

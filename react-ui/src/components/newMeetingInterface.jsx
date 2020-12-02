@@ -70,23 +70,12 @@ const NewMeetingInterface = (props) => {
                 .then(x => props.updateMeetings())
             // api.addHost(mtg.meetingID, localStorage.getItem(LOCAL_STORAGE_KEY))
             // newMeeting.createOnline(uuidv4(), title, date, startTime, endTime, id, passcode, isOpen, maxParticipants)
-
-            console.log(title)
-            console.log(dField)
-            console.log(date)
-            console.log(sField)
-            console.log(startTime)
-            console.log(eField)
-            console.log(endTime)
-            console.log(isOpen)
-            console.log(maxParticipants)
-            console.log(id)
-            console.log(passcode)
-            console.log(openRef)
         }
         else {
             const location = locationRef.current.value
-            newMeeting.createInPerson(uuidv4(), title, date, startTime, endTime, location, isOpen, maxParticipants)
+            api.createMeeting(title,date,startTime,endTime,isOpen,maxParticipants,location,null,false)
+                .then(mtg => api.addHost(mtg.insertId, localStorage.getItem(LOCAL_STORAGE_KEY)))
+                .then(x => props.updateMeetings())
         }
 
         // props.setMeetings(prevMeetings => {

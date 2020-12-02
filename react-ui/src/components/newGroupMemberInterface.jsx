@@ -25,7 +25,12 @@ const NewGroupMemberInterface = (props) => {
     const nameRef = useRef()
 
     // MODAL HANDLERS
-    const handleClose = () => setModalShow(false)
+    const handleClose = () => {
+        setModalShow(false)
+        setSelf(false)
+        setInvalid(false)
+        setExists(false)
+    }
     const handleShow = () => setModalShow(true)
 
     // NEW MEETING HANDLER
@@ -128,7 +133,7 @@ const NewGroupMemberInterface = (props) => {
                             </BS.Alert>
                             : null
                     }
-                    <BS.Form>
+                    {/*<BS.Form >*/}
                         <BS.Form.Group controlId='text'>
                             <BS.Form.Control
                                 ref={nameRef}
@@ -137,7 +142,7 @@ const NewGroupMemberInterface = (props) => {
                                 placeholder='Group Member E-mail'
                             />
                         </BS.Form.Group>
-                    </BS.Form>
+                    {/*</BS.Form>*/}
                 </BS.Modal.Body>
 
                 {/* ACTION BUTTONS */}

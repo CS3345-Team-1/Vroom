@@ -60,7 +60,7 @@ const Home = (props) => {
                 <BS.Card.Body>
                     <div id='main-container'>
                         <div>
-                            <BS.Toast>
+                            <BS.Toast className={'meeting-toast'}>
                                 <BS.ToastHeader closeButton={false}>
                                     <Icon.PersonCircle/>&nbsp;&nbsp;Welcome, {currentUser ? currentUser[0].firstName : 'User'}!
                                 </BS.ToastHeader>
