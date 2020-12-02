@@ -159,7 +159,6 @@ if (!isDev && cluster.isMaster) {
     //*****meetings table*****
     //create new meeting
     router.post('/postmeetingbody', async (req, res) => {
-        // var meetingID = req.body.meetingID
         var meetingName = req.body.meetingName
         var date = req.body.date
         var isOnline = req.body.isOnline
@@ -220,39 +219,6 @@ if (!isDev && cluster.isMaster) {
         });
     });
 
-    //change meeting start time
-    router.put('/putmeetings/:meetingID', async (req, res) => {
-        var startTimeNew = req.body.startTime
-        var meetingID = req.params.meetingID
-
-        con.query("UPDATE meetings SET startTime = ? WHERE meetingID = ?", [startTimeNew,meetingID],function (err, result, fields) {
-            if (err) throw err;
-            res.end(JSON.stringify(result)); // Result in JSON format
-        });
-    });
-
-    //change meeting end time
-    router.put('/putmeetings/:meetingID', async (req, res) => {
-        var endTimeNew = req.body.endTime
-        var meetingID = req.params.meetingID
-
-        con.query("UPDATE meetings SET endTime = ? WHERE meetingID = ?", [endTimeNew,meetingID],function (err, result, fields) {
-            if (err) throw err;
-            res.end(JSON.stringify(result)); // Result in JSON format
-        });
-    });
-
-    //change meeting name
-    router.put('/putmeetings/:meetingID', async (req, res) => {
-        var meetingNameNew = req.body.meetingName
-        var meetingID = req.params.meetingID
-
-        con.query("UPDATE meetings SET meetingName = ? WHERE meetingID = ?", [meetingNameNew,meetingID],function (err, result, fields) {
-            if (err) throw err;
-            res.end(JSON.stringify(result)); // Result in JSON format
-        });
-    });
-
     //cancel meeting(mark is_cancelled as true)
     router.put('/cancelmeeting/:meetingID', async (req, res) => {
         var meetingID = req.params.meetingID
@@ -281,24 +247,6 @@ if (!isDev && cluster.isMaster) {
         var participantID = req.params.participantID
         con.query("DELETE FROM meetingmembers WHERE participantID = ?", participantID, function (err, result, fields) {
             if (err) return console.error(error.message);
-            res.end(JSON.stringify(result));
-        });
-    });
-
-    //get all meetings that a given userID is part of
-    router.get('/meetingMembers/:userID', function (req, res) {
-        var userID = req.params.userID;
-        con.query("select * from meetings inner join meetingMembers on meetings.meetingID = meetingMembers.meetingID where meetingMembers.userID = ? ORDER BY meetings.startTime", userID, function(err, result, fields) {
-            if (err) throw err;
-            res.end(JSON.stringify(result));
-        });
-    });
-
-    //get all users who are part of a given meeting
-    router.get('/meetingMembers/:meetingID', function (req, res) {
-        var meetingID = req.params.meetingID;
-        con.query("select userID from meetingMembers where meetingID = ?", meetingID, function(err, result, fields) {
-            if (err) throw err;
             res.end(JSON.stringify(result));
         });
     });
@@ -332,15 +280,6 @@ if (!isDev && cluster.isMaster) {
             res.end(JSON.stringify(result)); // Result in JSON format
         });
     });
-    //delete a group and remove all group members with matching group id from groupMembers table
-    //**this may not work
-    // router.delete('/deletegroup:groupID', async (req, res) => {
-    //     var groupID = req.params.groupID
-    //     con.query("DELETE FROM groupMembers WHERE groupID = ? UNION DELETE FROM groups where groupID = ?", [groupID, groupID], function (err, result, fields) {
-    //         if (err) return console.error(err.message);
-    //         res.end(JSON.stringify(result));
-    //     });
-    // });
 
     //remove a group member
     router.delete('/deleteGroup/:id', function (req, res) {
@@ -389,29 +328,6 @@ if (!isDev && cluster.isMaster) {
         });
     });
 
-    //*****notifications table*****
-    //create a new notification
-    router.post('/postnotif', async (req, res) => {
-        var notificationTime = req.body.notificationTime
-        var notificationType = req.body.notificationType
-        var sender = req.body.sender
-        var recipient = req.body.recipient
-        var meetingID = req.body.meetingID
-        con.query("INSERT INTO notifications (notificationTime, notificationType, sender, recipient, meetingID) VALUES (?,?,?,?,?)", [notificationTime, notificationType, sender, recipient, meetingID], function (err, result, fields) {
-            if (err) throw err;
-            res.end(JSON.stringify(result)); // Result in JSON format
-        });
-    });
-
-    //get all notifications in which the recipient has a given userID
-    router.get('/notifications/:userID', function (req, res) {
-        var uID = req.params.userID;
-        con.query("select * from notifications where recipient = ?", uID, function(err, result, fields) {
-            if (err) throw err;
-            res.end(JSON.stringify(result));
-        });
-    });
-
     //*****comments table*****
     //add a new comment
     router.post('/postcomment', async (req, res) => {
@@ -433,6 +349,7 @@ if (!isDev && cluster.isMaster) {
             res.end(JSON.stringify(result));
         });
     });
+    
     // END API CALLS
 
     // All remaining requests return the React app, so it can handle routing.
