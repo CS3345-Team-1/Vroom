@@ -5,6 +5,7 @@ import {CopyToClipboard} from 'react-copy-to-clipboard'
 import * as Icon from 'react-bootstrap-icons'
 import CopiedBadge from './copiedBadge'
 import {Api} from '../api/api'
+import {LOCAL_STORAGE_KEY} from '../config'
 
 
 const PasscodeInterface = (props) => {
@@ -63,19 +64,36 @@ const PasscodeInterface = (props) => {
             </BS.OverlayTrigger>
 
             {/* EDIT BUTTON, LAUNCHES MODAL */}
-            <BS.OverlayTrigger
-                trigger='hover'
-                placement='right'
-                overlay={
-                    <BS.Tooltip id={'tooltip-right'}>
-                        Click to Edit
-                    </BS.Tooltip>
-                }
-            >
-                <BS.Button variant='link' size='sm' onClick={handleShow} className={'shadow-none'}>
-                    <Icon.PencilFill />
-                </BS.Button>
-            </BS.OverlayTrigger>
+            {
+                props.meeting.participants.find(x => x.userId.toString() === localStorage.getItem(LOCAL_STORAGE_KEY)).isHost ?
+                    <BS.OverlayTrigger
+                        trigger='hover'
+                        placement='right'
+                        overlay={
+                            <BS.Tooltip id={'tooltip-right'}>
+                                Click to Edit
+                            </BS.Tooltip>
+                        }
+                    >
+                        <BS.Button variant='link' size='sm' onClick={handleShow} className={'shadow-none'}>
+                            <Icon.PencilFill />
+                        </BS.Button>
+                    </BS.OverlayTrigger>
+                    : null
+            }
+            {/*<BS.OverlayTrigger*/}
+            {/*    trigger='hover'*/}
+            {/*    placement='right'*/}
+            {/*    overlay={*/}
+            {/*        <BS.Tooltip id={'tooltip-right'}>*/}
+            {/*            Click to Edit*/}
+            {/*        </BS.Tooltip>*/}
+            {/*    }*/}
+            {/*>*/}
+            {/*    <BS.Button variant='link' size='sm' onClick={handleShow} className={'shadow-none'}>*/}
+            {/*        <Icon.PencilFill />*/}
+            {/*    </BS.Button>*/}
+            {/*</BS.OverlayTrigger>*/}
 
             {/* COPIED TO CLIPBOARD ALERT */}
             <CopiedBadge copyAlert={copyAlert} setCopyAlert={(i) => setCopyAlert(i)} />

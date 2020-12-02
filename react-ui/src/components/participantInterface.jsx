@@ -4,6 +4,7 @@ import * as BS from 'react-bootstrap'
 import * as Icon from 'react-bootstrap-icons'
 import {v4 as uuidv4} from 'uuid'
 import {Api} from '../api/api'
+import {LOCAL_STORAGE_KEY} from '../config'
 
 
 const ParticipantInterface = (props) => {
@@ -72,19 +73,23 @@ const ParticipantInterface = (props) => {
     return (
         <>
             {/* DISPLAYED TOGGLE ELEMENT WITH TOOLTIP */}
-            <BS.OverlayTrigger
-                trigger='hover'
-                placement='right'
-                overlay={
-                    <BS.Tooltip id={`tooltip-right`}>
-                        Click to Add
-                    </BS.Tooltip>
-                }
-            >
-                <BS.Button variant='link' size='sm' onClick={handleShow} className={'shadow-none'}>
-                    <Icon.PersonPlusFill />
-                </BS.Button>
-            </BS.OverlayTrigger>
+            {
+                props.meeting.participants.find(x => x.userId.toString() === localStorage.getItem(LOCAL_STORAGE_KEY)).isHost ?
+                    <BS.OverlayTrigger
+                        trigger='hover'
+                        placement='right'
+                        overlay={
+                            <BS.Tooltip id={`tooltip-right`}>
+                                Click to Add
+                            </BS.Tooltip>
+                        }
+                    >
+                        <BS.Button variant='link' size='sm' onClick={handleShow} className={'shadow-none'}>
+                            <Icon.PersonPlusFill />
+                        </BS.Button>
+                    </BS.OverlayTrigger>
+                    : null
+            }
 
             {/* START MODAL */}
             <BS.Modal

@@ -2,6 +2,7 @@ import React from 'react'
 
 import * as BS from 'react-bootstrap'
 import {Api} from '../api/api'
+import {LOCAL_STORAGE_KEY} from '../config'
 
 
 const Participant = (props) => {
@@ -39,21 +40,44 @@ const Participant = (props) => {
                     </BS.Button>
                 </BS.OverlayTrigger>
             ) : (
-                <BS.OverlayTrigger
-                    trigger='hover'
-                    placement='bottom'
-                    overlay={
-                        <BS.Tooltip id={`tooltip-bottom`}>
-                            Click to Remove
-                        </BS.Tooltip>
-                    }
-                >
-                    {/* REMOVE PARTICIPANT ON CLICK */}
-                    <BS.Button as={BS.Badge} pill variant='secondary' onClick={handleRemove} className='participant-label'>
-                        {props.participant.first}
-                    </BS.Button>
-                </BS.OverlayTrigger>
-            )
+                props.meeting.participants.find(x => x.userId.toString() === localStorage.getItem(LOCAL_STORAGE_KEY)).isHost ?
+                    (
+                        <BS.OverlayTrigger
+                            trigger='hover'
+                            placement='bottom'
+                            overlay={
+                                <BS.Tooltip id={`tooltip-bottom`}>
+                                    Click to Remove
+                                </BS.Tooltip>
+                            }
+                        >
+                            {/* REMOVE PARTICIPANT ON CLICK */}
+                            <BS.Button as={BS.Badge} pill variant='secondary' onClick={handleRemove} className='participant-label'>
+                                {props.participant.first}
+                            </BS.Button>
+                        </BS.OverlayTrigger>
+                    ) : (
+                        <BS.Button as={BS.Badge} pill variant='secondary' className='participant-label'>
+                            {props.participant.first}
+                        </BS.Button>
+                    )
+                )
+
+                // <BS.OverlayTrigger
+                //     trigger='hover'
+                //     placement='bottom'
+                //     overlay={
+                //         <BS.Tooltip id={`tooltip-bottom`}>
+                //             Click to Remove
+                //         </BS.Tooltip>
+                //     }
+                // >
+                //     {/* REMOVE PARTICIPANT ON CLICK */}
+                //     <BS.Button as={BS.Badge} pill variant='secondary' onClick={handleRemove} className='participant-label'>
+                //         {props.participant.first}
+                //     </BS.Button>
+                // </BS.OverlayTrigger>
+            // )
         }
     </>
     )

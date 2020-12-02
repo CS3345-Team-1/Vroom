@@ -9,9 +9,13 @@ import Participant from './participant'
 import ParticipantInterface from './participantInterface'
 import MeetingIDInterface from './meetingIDInterface'
 import EditPasscodeInterface from './passcodeInterface'
+import {LOCAL_STORAGE_KEY} from '../config'
+import {Api} from '../api/api'
 
 
 const Meeting = (props) => {
+    const api = new Api()
+
     // STATE LISTENERS
     const [participants, setParticipants] = useState([])
     const [notes, setNotes] = useState([])
@@ -30,6 +34,10 @@ const Meeting = (props) => {
     // MEETING CANCELLATION HANDLER
     const handleCancelClick = () => {
         props.handleCancel(props.meeting.id)
+    }
+
+    const handleLeaveClick = () => {
+        api.removeMember(props.meeting.participants.find(x => x.userId.toString() === localStorage.getItem(LOCAL_STORAGE_KEY)).id).then(x => props.updateMeetings())
     }
 
     // CALENDAR EXPORT BUTTON
@@ -113,6 +121,32 @@ const Meeting = (props) => {
         )
     }
 
+    // CANCELLATION BUTTON AND CONFIRMATION PROMPT
+    const LeaveButton = () => {
+        const [show, setShow] = useState(false)
+        const target = useRef(null)
+
+        const popover = (
+            <BS.Popover id='popover-basic'>
+                <BS.Popover.Title as='h3'>Are you sure?</BS.Popover.Title>
+                <BS.Popover.Content>
+                    <BS.Button variant={'danger'} size={'sm'} onClick={handleLeaveClick} block>
+                        Yes, remove me.
+                    </BS.Button>
+                    <BS.Button variant={'secondary'} size={'sm'} block>
+                        Wait, nevermind.
+                    </BS.Button>
+                </BS.Popover.Content>
+            </BS.Popover>
+        )
+
+        return(
+            <BS.OverlayTrigger trigger='focus' placement='left' overlay={popover}>
+                <BS.Button ref={target} variant='danger' size='sm'>Leave Meeting</BS.Button>
+            </BS.OverlayTrigger>
+        )
+    }
+
     return(
         <>
             {/* BEGIN MEETING DISPLAY AS BOOTSTRAP ACCORDION */}
@@ -175,7 +209,11 @@ const Meeting = (props) => {
                                     <ParticipantInterface updateMeetings={props.updateMeetings} meeting={props.meeting} setParticipants={(i) => setParticipants(i)} setMeetings={(i) => props.setMeetings(i)}/>
                                 </div>
                             </div>
-                            <CancelButton />
+                            {
+                                props.meeting.participants.find(x => x.userId.toString() === localStorage.getItem(LOCAL_STORAGE_KEY)).isHost ?
+                                    <CancelButton />
+                                    : <LeaveButton />
+                            }
                         </BS.Toast.Body>
                     </BS.Accordion.Collapse>
             </BS.Accordion>
