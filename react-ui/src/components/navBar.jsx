@@ -25,8 +25,13 @@ const NavBar = (props) => {
     return (
         <BS.Navbar as={BS.Card.Header} bg='primary' variant='dark'>
             {/*{ console.log(url) }*/}
-            <BS.Navbar.Brand id='logo' as='BS.Button' variant='outline' size='lg'>
-                vroom!
+            <BS.Navbar.Brand href="home" id='logo' as='BS.Button' variant='outline' size='lg'>
+                <img 
+                src='../public/vroom 1.PNG'
+                width = "160"
+                height = "50"
+                className = "d-inline-block align-top"
+                alt = "Vroom!"/>
             </BS.Navbar.Brand>
             <BS.Nav className={'ml-auto'}>
                 <BS.OverlayTrigger
