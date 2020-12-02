@@ -5,6 +5,7 @@ import * as Icon from 'react-bootstrap-icons'
 import { useHistory } from 'react-router-dom'
 
 import { LOCAL_STORAGE_KEY } from '../config'
+import UserSearchInterface from './userSearchInterface'
 
 const NavBar = (props) => {
     // const { url } = useParams()
@@ -75,6 +76,23 @@ const NavBar = (props) => {
                         <Icon.People className='header-icon' />
                     </BS.Nav.Link>
                 </BS.OverlayTrigger>
+
+                {/*<BS.OverlayTrigger*/}
+                {/*    key='bottom'*/}
+                {/*    placement='bottom'*/}
+                {/*    overlay={*/}
+                {/*        <BS.Tooltip id={`tooltip-groups`}>*/}
+                {/*            Find User*/}
+                {/*        </BS.Tooltip>*/}
+                {/*    }*/}
+                {/*>*/}
+                {/*    <BS.Nav.Link href={'/groups'} active={groupsActive}>*/}
+                {/*        <Icon.Search className='header-icon' />*/}
+                {/*    </BS.Nav.Link>*/}
+                {/*</BS.OverlayTrigger>*/}
+
+                <UserSearchInterface />
+
                 {/*<BS.OverlayTrigger*/}
                 {/*    key='bottom'*/}
                 {/*    placement='bottom'*/}
