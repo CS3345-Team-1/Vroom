@@ -167,9 +167,20 @@ export class Api {
         })
     }
 
-    addGroupMember(memberId, groupId, userId){
+    getGroups(memberId){
         return new Promise((resolve, reject) => {
-            axios.post(`${this.url}/addGroupMember`, {memberId: memberId, groupId: groupId, userId: userId})
+            axios.get(`${this.url}/groupsFor/${memberId}`, this.config)
+                .then(x => resolve(x.data))
+                .catch(e => {
+                    alert(e)
+                    reject()
+                })
+        })
+    }
+
+    addGroupMember(groupId, userId){
+        return new Promise((resolve, reject) => {
+            axios.post(`${this.url}/postgroupmember`, {groupID: groupId, userID: userId})
             .then(x => resolve(x.data))
             .catch(e => {
                 alert(e)
@@ -178,9 +189,9 @@ export class Api {
         })
     }
 
-    deleteGroupMember(memberId, groupId, userId){
+    removeGroupMember(id){
         return new Promise((resolve, reject) => {
-            axios.post(`${this.url}/deleteGroupMember`, {memberId: memberId, groupId: groupId, userId: userId})
+            axios.delete(`${this.url}/deletegroupmember/${id}`, this.config)
             .then(x => resolve(x.data))
             .catch(e => {
                 alert(e)
@@ -200,9 +211,9 @@ export class Api {
         })
     }
 
-    addGroup(groupId, ownerId, groupName){
+    addGroup(name, owner){
         return new Promise((resolve, reject) => {
-            axios.post(`${this.url}/postgroupbody`, {groupId: groupId, ownerId: ownerId, groupName: groupName})
+            axios.post(`${this.url}/postgroupbody`, {name: name, owner: owner})
             .then(x => resolve(x.data))
             .catch(e => {
                 alert(e)
@@ -213,7 +224,7 @@ export class Api {
 
     deleteGroup(groupId){
         return new Promise((resolve, reject) => {
-            axios.post(`${this.url}/deleteGroup/${groupId}`, this.config)
+            axios.delete(`${this.url}/deleteGroup/${groupId}`, this.config)
             .then(x => resolve(x.data))
             .catch(e => {
                 alert(e)

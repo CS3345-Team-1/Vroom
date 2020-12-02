@@ -55,7 +55,8 @@ const NewMeetingInterface = (props) => {
         const startTime = new Date(new Date(dField + ' ' + sField) - tzoffset).toISOString()
         const eField = endTimeRef.current.state.inputValue
         const endTime = new Date(new Date(dField + ' ' + eField) - tzoffset).toISOString()
-        const isOpen = openRef.current.value
+        // const isOpen = openRef.current.value
+        const isOpen = openRef.current.checked
         const maxParticipants = maxRef.current.value
 
 
@@ -81,6 +82,7 @@ const NewMeetingInterface = (props) => {
             console.log(maxParticipants)
             console.log(id)
             console.log(passcode)
+            console.log(openRef)
         }
         else {
             const location = locationRef.current.value
@@ -359,7 +361,7 @@ const NewMeetingInterface = (props) => {
                                     label='This is an open meeting.'
                                     onChange={() => setMaxDisabled(!maxDisabled)}
                                 />
-                                {console.log(openRef.current)}
+                                {console.log(openRef)}
                                 <BS.Form.Text className='text-muted'>
                                     Open meetings allow other users to join as participants.
                                 </BS.Form.Text>

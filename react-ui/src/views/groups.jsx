@@ -10,33 +10,45 @@ import NewGroupMemberInterface from '../components/newGroupMemberInterface'
 import GroupMember from '../components/groupMember'
 import {User} from '../models/user'
 import NavBar from '../components/navBar'
+import {Api} from '../api/api'
+import {LOCAL_STORAGE_KEY} from '../config'
+import { useHistory } from 'react-router-dom'
+
 
 const LOCAL_STORAGE_KEY_G = 'vroom.groups'
 
 
 const Groups = (props) => {
+    const api = new Api()
+    const history = useHistory()
 
-    const [groups, setGroups] = useState([
-        new Group(1111, 'Study Group',
-    [
-                new User('1', 'test1@email.com', 'Bob', 'Test', [], []),
-                new User('2', 'test2@email.com', 'Alice', 'Test', [], []),
-                new User('3', 'test3@email.com', 'Steve', 'Test', [], []),
-                new User('4', 'test4@email.com', 'Jane', 'Test', [], []),
-                new User('5', 'test5@email.com', 'John', 'Test', [], [])
-            ]
-        ),
-        new Group(1112, 'Study Group 2',
-            [
-                new User('6', 'test1@email.com', 'Bob2', 'Test', [], []),
-                new User('7', 'test2@email.com', 'Alice2', 'Test', [], []),
-                new User('8', 'test3@email.com', 'Steve2', 'Test', [], []),
-                new User('9', 'test4@email.com', 'Jane2', 'Test', [], []),
-            ]
-        )
-    ])
+    const [loaded, setLoaded] = useState(false)
+    const [groups, setGroups] = useState()
+
+    const [readGroups, setReadGroups] = useState()
+
+    useEffect(() => {
+        api.getGroups(localStorage.getItem(LOCAL_STORAGE_KEY)).then(x => setReadGroups(x))
+    }, [])
+
+    useEffect(() => {
+        if (readGroups) {
+            let parsedGroups = []
+            readGroups.map(g => parsedGroups.push(new Group().parseDetail(g)))
+            setGroups(parsedGroups)
+        }
+    }, [readGroups])
+
+    useEffect(() => {
+        if (groups)
+            setLoaded(true)
+    }, [groups])
 
     const tabRef = useRef()
+
+    const updateGroups = () => {
+        api.getGroups(localStorage.getItem(LOCAL_STORAGE_KEY)).then(x => setReadGroups(x))
+    }
 
     // useEffect(() => {
     //     const storedGroups = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_G))
@@ -47,16 +59,14 @@ const Groups = (props) => {
     //     localStorage.setItem(LOCAL_STORAGE_KEY_G, JSON.stringify(groups))
     // }, [groups])
 
-    // REMOVES A DELETED GROUP FROM LIST
-    const handleDelete = (id) => {
-        const newGroups = [...groups]
-        setGroups(newGroups.filter(group => group.id !== id))
-    }
+    useEffect(() => {
+        console.log(tabRef)
+    }, [tabRef])
 
     const GroupList = (props) => {
         return (
             <BS.Col sm={4}>
-                <NewGroupInterface setGroups={(i) => setGroups(i)} tabRef={tabRef} />
+                <NewGroupInterface updateGroups={updateGroups} setGroups={(i) => setGroups(i)} tabRef={tabRef} />
                 <BS.ListGroup as={BS.Toast} variant={'flush'} className={'group-tabs mb-3'}>
                     {groups.map((group) =>
                         <BS.ListGroup.Item action href={'#' + group.id}>
@@ -72,31 +82,91 @@ const Groups = (props) => {
 
     const GroupDetail = (props) => {
         const [members, setMembers] = useState(props.group.members)
+
+        const handleDelete = () => {
+            api.deleteGroup(props.group.id).then(x => updateGroups())
+            history.push('/groups')
+        }
+
+        const DeleteButton = () => {
+            const [show, setShow] = useState(false)
+            const target = useRef(null)
+
+            const popover = (
+                <BS.Popover id='popover-basic'>
+                    <BS.Popover.Title as='h3'>Delete Group?</BS.Popover.Title>
+                    <BS.Popover.Content>
+                        <BS.Button variant={'danger'} size={'sm'} onClick={handleDelete} block>
+                            Yes, delete.
+                        </BS.Button>
+                        <BS.Button variant={'secondary'} size={'sm'} block>
+                            Wait, nevermind.
+                        </BS.Button>
+                    </BS.Popover.Content>
+                </BS.Popover>
+            )
+
+            return(
+                // <BS.OverlayTrigger trigger='focus' placement='left' overlay={popover}>
+                //     <BS.OverlayTrigger
+                //         trigger='hover'
+                //         placement='top'
+                //         overlay={
+                //             <BS.Tooltip id={`tooltip-top`}>
+                //                 Delete Group
+                //             </BS.Tooltip>
+                //         }
+                //     >
+                //         <BS.Button as={BS.Badge}
+                //                    // onClick={handleDelete}
+                //                     ref={target}
+                //                    variant={'outline-danger'}
+                //                    className={'shadow-none'}
+                //                    size={'sm'}
+                //                    pill
+                //         >
+                //             <Icon.X/>
+                //         </BS.Button>
+                //     </BS.OverlayTrigger>
+                // </BS.OverlayTrigger>
+                <BS.OverlayTrigger
+                    trigger='hover'
+                    placement='top'
+                    overlay={
+                        <BS.Tooltip id={`tooltip-top`}>
+                            Delete Group
+                        </BS.Tooltip>
+                    }
+                >
+                <BS.OverlayTrigger trigger='focus' placement='left' overlay={popover}>
+                    <BS.Button ref={target} variant='link' size='sm' className={'shadow-none'}>
+                        <Icon.XCircle />
+                    </BS.Button>
+                </BS.OverlayTrigger>
+                </BS.OverlayTrigger>
+            )
+        }
+
         return (
             <BS.Toast className={'meeting-toast'}>
                 <BS.Toast.Header closeButton={false}>
                     <Icon.PeopleFill />
                     &nbsp;Group Members
                     <div className={'ml-auto'}>
-                        <NewGroupMemberInterface group={props.group} setMembers={(i) => setMembers(i)} />
-                        <BS.OverlayTrigger
-                            trigger='hover'
-                            placement='top'
-                            overlay={
-                                <BS.Tooltip id={`tooltip-top`}>
-                                    Delete Group
-                                </BS.Tooltip>
-                            }
-                        >
-                            <BS.Button as={BS.Badge}
-                                variant={'outline-danger'}
-                                className={'shadow-none'}
-                                size={'sm'}
-                                pill
-                            >
-                                <Icon.X/>
-                            </BS.Button>
-                        </BS.OverlayTrigger>
+                        <NewGroupMemberInterface updateGroups={updateGroups} group={props.group} setMembers={(i) => setMembers(i)} />
+                        {/*<BS.OverlayTrigger*/}
+                        {/*    trigger='hover'*/}
+                        {/*    placement='top'*/}
+                        {/*    overlay={*/}
+                        {/*        <BS.Tooltip id={`tooltip-top`}>*/}
+                        {/*            Delete Group*/}
+                        {/*        </BS.Tooltip>*/}
+                        {/*    }*/}
+                        {/*>*/}
+                        {/*    <DeleteButton />*/}
+                        {/*</BS.OverlayTrigger>*/}
+                        <DeleteButton />
+
                     </div>
                 </BS.Toast.Header>
                 <BS.Toast.Body>
@@ -105,7 +175,7 @@ const Groups = (props) => {
                             {members.length > 0 ?
                                 members.map((member) =>
                                     <div>
-                                        <GroupMember member={member} group={props.group} setGroups={(i) => setGroups(i)} />
+                                        <GroupMember updateGroups={updateGroups} member={member} group={props.group} setGroups={(i) => setGroups(i)} />
                                     </div>
                                 )
                                 :
@@ -131,6 +201,8 @@ const Groups = (props) => {
             </>
         )
     }
+
+    if(!loaded) return <></>
 
     return (
         <div id='content'>

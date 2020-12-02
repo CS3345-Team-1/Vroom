@@ -26,6 +26,7 @@ const ParticipantInterface = (props) => {
     const handleAddParticipant = () => {
         setExists(false)
         setInvalid(false)
+
         // GET FIELD VALUE
         const name = nameRef.current.value
 
@@ -36,6 +37,8 @@ const ParticipantInterface = (props) => {
             setExists(true)
             return
         }
+
+
 
         // // CREATE A NEW PARTICIPANT
         // const newParticipant = {

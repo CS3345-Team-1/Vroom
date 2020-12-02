@@ -4,29 +4,33 @@ import * as BS from 'react-bootstrap'
 import * as Icon from 'react-bootstrap-icons'
 import {CopyToClipboard} from 'react-copy-to-clipboard'
 import CopiedBadge from './copiedBadge'
+import {Api} from '../api/api'
 
 
 const GroupMember = (props) => {
+    const api = new Api()
 
     const [copyAlert, setCopyAlert] = React.useState(false)
 
 
     // REMOVE PARTICIPANT HANDLER
     const handleRemove = () => {
-        // FILTER PARTICIPANT OUT OF THE PARTICIPANTS LIST
-        const filtered = props.group.members.filter((member) => {
-            return member.id !== props.member.id
-        })
+        // // FILTER PARTICIPANT OUT OF THE PARTICIPANTS LIST
+        // const filtered = props.group.members.filter((member) => {
+        //     return member.id !== props.member.id
+        // })
+        //
+        // // UPDATE MEETING PARTICIPANTS AND MEETING STATE
+        // props.group.members = filtered
+        // props.setGroups(groups => { return [...groups] })
 
-        // UPDATE MEETING PARTICIPANTS AND MEETING STATE
-        props.group.members = filtered
-        props.setGroups(groups => { return [...groups] })
+        api.removeGroupMember(props.member.id).then(x => props.updateGroups())
     }
 
     return(
         <>
             {/* DISPLAY GROUP MEMBER */}
-            <BS.Badge variant={'dark'} className={'participant-label'} pill>{props.member.firstName + ' ' + props.member.lastName}</BS.Badge>
+            <BS.Badge variant={'dark'} className={'participant-label'} pill>{props.member.first + ' ' + props.member.last}</BS.Badge>
 
 
 

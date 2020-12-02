@@ -315,10 +315,9 @@ if (!isDev && cluster.isMaster) {
     //*****groups table*****
     //create a new group
     router.post('/postgroupbody', async (req, res) => {
-        var groupID = req.body.groupID
-        var ownerID = req.body.ownerID
-        var groupName = req.body.groupName
-        con.query("INSERT INTO groups (groupID, ownerID, groupName) VALUES (?,?,?)", [groupID, ownerID, groupName], function (err, result, fields) {
+        var ownerID = req.body.owner
+        var groupName = req.body.name
+        con.query("INSERT INTO groups (ownerID, groupName) VALUES (?,?)", [ownerID, groupName], function (err, result, fields) {
             if (err) throw err;
             res.end(JSON.stringify(result)); // Result in JSON format
         });
@@ -335,10 +334,19 @@ if (!isDev && cluster.isMaster) {
     });
     //delete a group and remove all group members with matching group id from groupMembers table
     //**this may not work
-    router.delete('/deletegroup:groupID', async (req, res) => {
-        var groupID = req.params.groupID
-        con.query("DELETE FROM groupMembers WHERE groupID = ? UNION DELETE FROM groups where groupID = ?", [groupID, groupID], function (err, result, fields) {
-            if (err) return console.error(error.message);
+    // router.delete('/deletegroup:groupID', async (req, res) => {
+    //     var groupID = req.params.groupID
+    //     con.query("DELETE FROM groupMembers WHERE groupID = ? UNION DELETE FROM groups where groupID = ?", [groupID, groupID], function (err, result, fields) {
+    //         if (err) return console.error(err.message);
+    //         res.end(JSON.stringify(result));
+    //     });
+    // });
+
+    //remove a group member
+    router.delete('/deleteGroup/:id', function (req, res) {
+        var id = req.params.id
+        con.query("DELETE FROM groups WHERE groupID = ?", id, function (err, result, fields) {
+            if (err) return console.error(err.message);
             res.end(JSON.stringify(result));
         });
     });
@@ -346,20 +354,19 @@ if (!isDev && cluster.isMaster) {
     //*****groupMembers table*****
     //add a new group member
     router.post('/postgroupmember', async (req, res) => {
-        var memberID = req.body.memberID
         var groupID = req.body.groupID
         var userID = req.body.userID
-        con.query("INSERT INTO groupMembers (memberID, groupID, userID) VALUES (?,?,?)", [memberID, groupID, userID],function (err, result, fields) {
+        con.query("INSERT INTO groupmembers (groupID, userID) VALUES (?,?)", [groupID, userID],function (err, result, fields) {
             if (err) throw err;
             res.end(JSON.stringify(result)); // Result in JSON format
         });
     });
 
     //remove a group member
-    router.delete('/deletegroupmember/:memberID', async (req, res) => {
-        var memberID = req.params.memberID
-        con.query("DELETE FROM groupMembers WHERE memberID = ?", memberID, function (err, result, fields) {
-            if (err) return console.error(error.message);
+    router.delete('/deletegroupmember/:id', function (req, res) {
+        var id = req.params.id
+        con.query("DELETE FROM groupmembers WHERE memberID = ?", id, function (err, result, fields) {
+            if (err) return console.error(err.message);
             res.end(JSON.stringify(result));
         });
     });
@@ -368,6 +375,15 @@ if (!isDev && cluster.isMaster) {
     router.get('/groupMembers/:groupID', function (req, res) {
         var groupID = req.params.groupID;
         con.query("select * from notifications where groupID = ?", groupID, function(err, result, fields) {
+            if (err) throw err;
+            res.end(JSON.stringify(result));
+        });
+    });
+
+    // Get all groups for currently logged-in user
+    router.get('/groupsFor/:userId', function (req, res) {
+        var groupID = req.params.userId;
+        con.query("SELECT groups.*, (SELECT JSON_ARRAYAGG(JSON_OBJECT('email', users.email, 'first', users.firstName, 'last', users.lastName, 'userId', users.userID, 'id', groupmembers.memberID, 'userId', users.userID)) FROM users INNER JOIN groupmembers ON users.userID = groupmembers.userID WHERE groupmembers.groupID = groups.groupID) AS 'members' FROM groups WHERE groups.ownerID = 31 ORDER BY groups.groupName", groupID, function(err, result, fields) {
             if (err) throw err;
             res.end(JSON.stringify(result));
         });
