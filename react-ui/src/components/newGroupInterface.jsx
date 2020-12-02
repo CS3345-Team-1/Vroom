@@ -6,14 +6,21 @@ import {CopyToClipboard} from 'react-copy-to-clipboard'
 import CopiedBadge from './copiedBadge'
 import { Group } from '../models/group'
 import {v4 as uuidv4} from 'uuid'
+import { Api } from '../api/api'
+import { LOCAL_STORAGE_KEY } from '../config'
 
 
 const NewGroupInterface = (props) => {
+    // API
+    const api = new Api();
+
     // STATE LISTENER
     const [modalShow, setModalShow] = React.useState(false)
 
     // FORM TRACKING REF
     const nameRef = useRef()
+    
+    
 
     // MODAL HANDLERS
     const handleClose = () => setModalShow(false)
@@ -25,6 +32,8 @@ const NewGroupInterface = (props) => {
 
         // GET FIELD VALUE
         const groupName = nameRef.current.value
+        
+        
 
         // IF FIELD IS EMPTY, DO NOTHING
         if (groupName === '') {
@@ -33,8 +42,9 @@ const NewGroupInterface = (props) => {
         }
 
         // UPDATE MEETING ID AND STATE
-        const newGroup = new Group(uuidv4(), groupName, [])
-        props.setGroups(groups => {return [...groups, newGroup]})
+        const newGroup = new Group(uuidv4(), localStorage.getItem(LOCAL_STORAGE_KEY), groupName, [])
+        api.addGroup(uuidv4(), localStorage.getItem(LOCAL_STORAGE_KEY), groupName)
+        .then(props.setGroups(groups => {return [...groups, newGroup]}))
 
         // CLOSE MODAL
         handleClose()

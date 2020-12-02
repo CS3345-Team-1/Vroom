@@ -1,7 +1,8 @@
 export class Group {
-    constructor(id, name, members) {
-        this.id = id
-        this.name = name
-        this.members = members
+    constructor(groupId, ownerId, groupName, groupMembers) {
+        this.groupId = groupId
+        this.ownerId = ownerId
+        this.groupName = groupName
+        this.groupMembers = groupMembers
     }
 }
